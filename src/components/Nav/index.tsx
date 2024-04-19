@@ -1,7 +1,8 @@
 import { Box, Tab, Tabs } from "@mui/material";
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { INavBarData } from "../../interfaces";
+import { pxToRem } from "../../utils";
 
 function a11yProps(index: number) {
   return {
@@ -13,6 +14,7 @@ function a11yProps(index: number) {
 function Nav({ data }: { data: Array<INavBarData> }) {
   const [value, setValue] = React.useState(0);
   const navigate = useNavigate();
+  const { pathname } = useLocation();
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -38,12 +40,12 @@ function Nav({ data }: { data: Array<INavBarData> }) {
           }}
         >
           {data?.map((item: INavBarData) => {
-            const { index, url, value } = item;
+            const { index, path, value } = item;
             return (
               <Tab
-                sx={{ color: "white", height: "64px" }}
+                sx={{ color: "white", height: pxToRem(64) }}
                 label={value || ""}
-                onClick={() => navigate(url)}
+                onClick={() => navigate(path)}
                 {...a11yProps(index)}
               />
             );

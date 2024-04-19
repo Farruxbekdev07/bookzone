@@ -1,10 +1,11 @@
 import React from "react";
 import { Box, Button, Typography } from "@mui/material";
-import book from "../../../assets/images/book.png";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import { colors } from "../../../constants/colors";
 import WindowIcon from "@mui/icons-material/Window";
 import { IStatisticsData } from "../../../interfaces";
+import { pxToRem } from "../../../utils";
+import { Book1 } from "../../../assets";
 
 function Statistics({ data }: { data: Array<IStatisticsData> }) {
   const { textYellow, colorGray, audioBookBg } = colors;
@@ -13,13 +14,13 @@ function Statistics({ data }: { data: Array<IStatisticsData> }) {
     <>
       <Box
         sx={{
-          minWidth: "400px",
+          minWidth: `${pxToRem(400)}`,
           display: "flex",
           flexDirection: "column",
-          gap: "30px",
-          padding: "25px",
+          gap: `${pxToRem(30)}`,
+          padding: `${pxToRem(25)}`,
           backgroundColor: audioBookBg,
-          borderRadius: "14px",
+          borderRadius: `${pxToRem(14)}`,
         }}
       >
         <Box className="flex">
@@ -28,25 +29,39 @@ function Statistics({ data }: { data: Array<IStatisticsData> }) {
           </Typography>
           <WindowIcon className="grid-icon" />
         </Box>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <Box
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: `${pxToRem(16)}`,
+          }}
+        >
           {data?.map((item: IStatisticsData) => (
             <Box
               className="flex"
-              sx={{ width: "100%", gap: "30px", alignItems: "end" }}
+              sx={{ width: "100%", gap: `${pxToRem(30)}`, alignItems: "end" }}
             >
               <Box>
                 <img
-                  src={item?.image || book}
+                  src={item?.image || Book1}
                   alt="book"
-                  style={{ width: "35px", height: "50px", objectFit: "cover" }}
+                  style={{
+                    width: `${pxToRem(35)}`,
+                    height: `${pxToRem(50)}`,
+                    objectFit: "cover",
+                  }}
                 />
               </Box>
               <Box>
                 <Box className="flex" sx={{ justifyContent: "space-between" }}>
-                  <Typography sx={{ fontSize: "16px", color: "white" }}>
+                  <Typography
+                    sx={{ fontSize: `${pxToRem(16)}`, color: "white" }}
+                  >
                     {item?.title}
                   </Typography>
-                  <Typography sx={{ color: colorGray, fontSize: "12px" }}>
+                  <Typography
+                    sx={{ color: colorGray, fontSize: `${pxToRem(12)}` }}
+                  >
                     {item?.progress}%
                   </Typography>
                 </Box>
@@ -55,16 +70,16 @@ function Statistics({ data }: { data: Array<IStatisticsData> }) {
                   sx={{
                     width: "100%",
                     justifyContent: "space-between",
-                    gap: "20px",
-                    marginTop: "10px",
+                    gap: `${pxToRem(20)}`,
+                    marginTop: `${pxToRem(10)}`,
                   }}
                 >
                   <Box
                     sx={{
-                      width: "180px",
-                      height: "25px",
+                      width: `${pxToRem(180)}`,
+                      height: `${pxToRem(25)}`,
                       backgroundColor: "white",
-                      borderRadius: "5px",
+                      borderRadius: `${pxToRem(5)}`,
                     }}
                   >
                     <Box
@@ -72,16 +87,16 @@ function Statistics({ data }: { data: Array<IStatisticsData> }) {
                         height: "100%",
                         width: `${item?.progress}%`,
                         backgroundColor: textYellow,
-                        borderRadius: "5px",
+                        borderRadius: `${pxToRem(5)}`,
                       }}
                     ></Box>
                   </Box>
                   <Button
                     variant="contained"
                     sx={{
-                      height: "25px",
-                      fontSize: "10px",
-                      width: "100px",
+                      height: `${pxToRem(25)}`,
+                      fontSize: `${pxToRem(10)}`,
+                      width: `${pxToRem(100)}`,
                       backgroundColor: textYellow,
                       color: "rgba(60, 39, 16, 1)",
                       ":hover": {
@@ -101,7 +116,7 @@ function Statistics({ data }: { data: Array<IStatisticsData> }) {
           sx={{
             backgroundColor: textYellow,
             width: "100%",
-            height: "45px",
+            height: `${pxToRem(45)}`,
             color: "rgba(100, 81, 61, 1)",
             ":hover": {
               bgcolor: textYellow,

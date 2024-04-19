@@ -3,7 +3,7 @@ const paths = {
   SIGN_UP: "/signup",
 
   AUTHOR: "/author",
-  AUTHOR__DETAILS: "/author/details",
+  AUTHOR__DETAILS: "/author/view",
   CREATE__AUTHOR: "/author/create",
 
   BOOKS: "/books",

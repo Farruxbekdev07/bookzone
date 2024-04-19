@@ -12,9 +12,10 @@ import { colors } from "../../constants/colors";
 import { useForm, Controller, FieldValues } from "react-hook-form";
 import { Link } from "react-router-dom";
 import paths from "../../constants/paths";
+import { pxToRem } from "../../utils";
 
 function SignIn() {
-  const matches = useMediaQuery("(min-width:1000px)");
+  const matches = useMediaQuery(`(min-width: ${pxToRem(1000)})`);
   const { SIGN_UP } = paths;
   const { buttonBg, registerBg } = colors;
 
@@ -40,14 +41,20 @@ function SignIn() {
         sx={{
           width: `${matches ? "50%" : "100%"}`,
           height: "100%",
-          padding: "100px 40px",
+          padding: `${pxToRem(100)} ${pxToRem(40)}`,
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           background: `${registerBg}`,
         }}
       >
-        <Box sx={{ width: "100%", maxWidth: "700px", height: "fit-content" }}>
+        <Box
+          sx={{
+            width: "100%",
+            maxWidth: `${pxToRem(700)}`,
+            height: "fit-content",
+          }}
+        >
           <img src={signInImage} alt="sign up" width={"100%"} />
         </Box>
       </Box>
@@ -56,17 +63,17 @@ function SignIn() {
           width: `${matches ? "50%" : "100%"}`,
           height: "100%",
           display: "flex",
-          padding: "50px 30px",
+          padding: `${pxToRem(50)} ${pxToRem(30)}`,
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        <Box sx={{ maxWidth: "600px", width: "100%" }}>
-          <Box sx={{ width: "100%", marginBottom: "30px" }}>
-            <Typography sx={{ fontSize: "36px", fontWeight: "900" }}>
+        <Box sx={{ maxWidth: `${pxToRem(600)}`, width: "100%" }}>
+          <Box sx={{ width: "100%", marginBottom: `${pxToRem(30)}` }}>
+            <Typography sx={{ fontSize: `${pxToRem(36)}`, fontWeight: "900" }}>
               Sign in
             </Typography>
-            <Typography sx={{ fontSize: "13px", fontWeight: "400" }}>
+            <Typography sx={{ fontSize: `${pxToRem(13)}`, fontWeight: "400" }}>
               Do not you have an account?{" "}
               <Link
                 to={SIGN_UP}
@@ -82,7 +89,7 @@ function SignIn() {
               display: "flex",
               flexDirection: "column",
               width: "100%",
-              gap: "20px",
+              gap: `${pxToRem(20)}`,
             }}
           >
             <Controller
@@ -133,9 +140,9 @@ function SignIn() {
                 fullWidth
                 type="submit"
                 sx={{
-                  height: "56px",
+                  height: `${pxToRem(56)}`,
                   backgroundColor: `${buttonBg}`,
-                  fontSize: "18px",
+                  fontSize: `${pxToRem(18)}`,
                   fontWeight: "500",
                   ":hover": {
                     bgcolor: `${buttonBg}`, // theme.palette.primary.main

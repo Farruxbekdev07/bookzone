@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { colors } from "../../../constants/colors";
+import { pxToRem } from "../../../utils";
 const { textYellow, colorGray, audioBookBg } = colors;
 
 export const StyledComponent = styled.div`
@@ -7,7 +8,7 @@ export const StyledComponent = styled.div`
     width: 100%;
     font-family: sans-serif;
     font-weight: 400;
-    font-size: 22px;
+    font-size: ${pxToRem(22)};
     color: gray;
   }
 
@@ -16,15 +17,15 @@ export const StyledComponent = styled.div`
   }
 
   .gap-10 {
-    gap: 10px;
+    gap: ${pxToRem(10)};
   }
 
   .name {
-    font-size: 32px;
+    font-size: ${pxToRem(32)};
   }
 
   .mt-10 {
-    margin-top: 10px;
+    margin-top: ${pxToRem(10)};
   }
 
   .text-center {
@@ -39,23 +40,27 @@ export const StyledComponent = styled.div`
     color: white;
   }
 
+  .text-gray {
+    color: ${colorGray};
+  }
+
   .grid-icon {
-    font-size: 36px;
+    font-size: ${pxToRem(36)};
     color: ${colorGray};
   }
   .iconButton {
-    width: 40px;
-    height: 40px;
+    width: ${pxToRem(40)};
+    height: ${pxToRem(40)};
     color: ${textYellow};
 
     svg {
-      font-size: 32px;
+      font-size: ${pxToRem(32)};
     }
   }
   .play {
     padding: 0;
-    width: 40px !important;
-    height: 40px;
+    width: ${pxToRem(40)} !important;
+    height: ${pxToRem(40)};
     background-color: ${textYellow};
     color: ${audioBookBg};
   }
@@ -67,14 +72,36 @@ export const StyledComponent = styled.div`
   }
   .audio-card-img {
     position: absolute;
-    top: 22px;
-    left: -14px;
-    width: 25px;
-    height: 25px;
+    top: ${pxToRem(22)};
+    left: -${pxToRem(14)};
+    width: ${pxToRem(25)};
+    height: ${pxToRem(25)};
   }
   .card-container {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(${pxToRem(225)}, 1fr));
+    gap: ${pxToRem(20)};
+    padding-top: ${pxToRem(40)};
+  }
+
+  .title {
+    font-size: ${pxToRem(36)};
+    color: ${textYellow};
+    text-align: center;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    text-transform: uppercase;
+    font-weight: 400 !important;
+  }
+
+  .description {
+    font-size: ${pxToRem(16)};
+    color: ${colorGray};
+    line-height: ${pxToRem(24)};
+    padding: ${pxToRem(15)} ${pxToRem(0)};
+  }
+
+  .details-title {
+    font-size: ${pxToRem(48)};
+    font-family: Georgia, "Times New Roman", Times, serif;
   }
 `;

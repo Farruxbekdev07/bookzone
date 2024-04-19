@@ -1,23 +1,22 @@
 export interface ITabsData {
   index: number;
   label: string;
-  data: IBookData[];
+  data?: Object | any;
 }
 export interface IStatisticsData {
   image?: File | string | any;
   title?: string;
   progress?: string | number;
 }
-
 export interface IContainerData {
   children: JSX.Element | any;
 }
 export interface INavBarData {
-  value: any;
+  value: string | number;
   index: number;
-  url: string;
+  path: string | any;
 }
-export interface ITabPanelProps {
+export interface ITabPanel {
   children?: React.ReactNode;
   index: number;
   value: number;
@@ -32,12 +31,20 @@ export interface IAudioBookCard {
 export interface IRoute {
   path: string;
   component: JSX.Element;
-  key: string;
+  key?: string;
 }
 export interface IBookData {
-  image: File | string | any;
+  image?: File | string | any;
   title: string;
-  author: string;
-  rate: number;
-  views: number;
+  author?: string;
+  rate?: number;
+  views?: number;
+}
+export interface IAuthorData {
+  image?: File | string | any;
+  fullName?: string;
+  dateOfBirth?: number | string | any;
+  dateOfDied?: number | string | any;
+  books?: number;
+  audioBooks?: number;
 }

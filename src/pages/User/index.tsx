@@ -8,152 +8,13 @@ import star from "../../assets/images/star.png";
 import { colors } from "../../constants/colors";
 import { StyledComponent } from "./Styles/style";
 import Statistics from "./components/statistics";
-import book from "../../assets/images/book.png";
-import dunyoningIshlari from "../../assets/images/dunyo-ishlari.png";
 import AudioBook from "./components/audio-book";
 import CustomTabs from "../../components/Tabs/customTabs";
 import CustomTabPanel from "../../components/Tabs";
 import { IBookData, ITabsData } from "../../interfaces";
-import CustomCard from "../../components/Cards/Books";
-
-const readBooks: IBookData[] = [
-  {
-    image: dunyoningIshlari,
-    title: "Dunyoning Ishlari",
-    author: "O'tkir Hoshimov",
-    rate: 4.1,
-    views: 3400,
-  },
-  {
-    image: dunyoningIshlari,
-    title: "Dunyoning Ishlari",
-    author: "O'tkir Hoshimov",
-    rate: 4.1,
-    views: 3400,
-  },
-  {
-    image: dunyoningIshlari,
-    title: "Dunyoning Ishlari",
-    author: "O'tkir Hoshimov",
-    rate: 4.1,
-    views: 3400,
-  },
-];
-const unreadBooks: IBookData[] = [
-  {
-    image: dunyoningIshlari,
-    title: "Ikki eshik orasi",
-    author: "O'tkir Hoshimov",
-    rate: 4.3,
-    views: 300,
-  },
-  {
-    image: dunyoningIshlari,
-    title: "Ikki eshik orasi",
-    author: "O'tkir Hoshimov",
-    rate: 4.3,
-    views: 300,
-  },
-  {
-    image: dunyoningIshlari,
-    title: "Ikki eshik orasi",
-    author: "O'tkir Hoshimov",
-    rate: 4.3,
-    views: 300,
-  },
-];
-const books: IBookData[] = [
-  {
-    image: dunyoningIshlari,
-    title: "Tushda kechgan umrlar",
-    author: "O'tkir Hoshimov",
-    rate: 4.4,
-    views: 5200,
-  },
-  {
-    image: dunyoningIshlari,
-    title: "Tushda kechgan umrlar",
-    author: "O'tkir Hoshimov",
-    rate: 4.4,
-    views: 5200,
-  },
-  {
-    image: dunyoningIshlari,
-    title: "Tushda kechgan umrlar",
-    author: "O'tkir Hoshimov",
-    rate: 4.4,
-    views: 5200,
-  },
-];
-const writers: IBookData[] = [
-  {
-    image: dunyoningIshlari,
-    title: "“Ajdar”ning tab",
-    author: "O'tkir Hoshimov",
-    rate: 3.9,
-    views: 1400,
-  },
-  {
-    image: dunyoningIshlari,
-    title: "“Ajdar”ning tab",
-    author: "O'tkir Hoshimov",
-    rate: 3.9,
-    views: 1400,
-  },
-  {
-    image: dunyoningIshlari,
-    title: "“Ajdar”ning tab",
-    author: "O'tkir Hoshimov",
-    rate: 3.9,
-    views: 1400,
-  },
-];
-
-const audioBookData = [
-  {
-    image: book,
-    title: "Ikki eshik orasi",
-    progress: 25,
-  },
-  {
-    image: book,
-    title: "Ikki eshik orasi",
-    progress: 50,
-  },
-  {
-    image: book,
-    title: "Ikki eshik orasi",
-    progress: 75,
-  },
-  {
-    image: book,
-    title: "Ikki eshik orasi",
-    progress: 100,
-  },
-];
-
-const tabData: ITabsData[] = [
-  {
-    index: 0,
-    label: "O'qilganlar",
-    data: readBooks,
-  },
-  {
-    index: 1,
-    label: "O'qishni xohlayman",
-    data: unreadBooks,
-  },
-  {
-    index: 2,
-    label: "O'qilmoqda",
-    data: books,
-  },
-  {
-    index: 3,
-    label: "Adiblar",
-    data: writers,
-  },
-];
+import CustomBookCard from "../../components/Cards/Books";
+import { audioBookData, userTabData } from "../../constants/data";
+import { pxToRem } from "../../utils";
 
 function Home() {
   const [value, setValue] = React.useState(0);
@@ -168,16 +29,16 @@ function Home() {
             backgroundImage: `url(${userBg})`,
             backgroundRepeat: "no-repeat",
             backgroundSize: "cover",
-            padding: "40px 80px",
+            padding: `${pxToRem(40)} ${pxToRem(80)}`,
             backgroundPosition: "right",
-            borderRadius: "16px",
+            borderRadius: `${pxToRem(16)}`,
           }}
         >
           <Box
             className="flex"
             sx={{
               width: "fit-content",
-              gap: "40px",
+              gap: `${pxToRem(40)}`,
             }}
           >
             <Box sx={{ width: "fit-content" }}>
@@ -185,19 +46,19 @@ function Home() {
                 <Avatar
                   alt="Remy Sharp"
                   src={userImage || ""}
-                  sx={{ width: "200px", height: "200px" }}
+                  sx={{ width: `${pxToRem(200)}`, height: `${pxToRem(200)}` }}
                 />
                 <Avatar
                   src={star || ""}
                   sx={{
                     backgroundColor: `${containerBg}`,
                     position: "absolute",
-                    right: "15px",
-                    top: "150px",
-                    border: `2px solid ${textYellow}`,
-                    padding: "10px",
-                    width: "45px",
-                    height: "45px",
+                    right: `${pxToRem(15)}`,
+                    top: `${pxToRem(150)}`,
+                    border: `${pxToRem(2)} solid ${textYellow}`,
+                    padding: `${pxToRem(10)}`,
+                    width: `${pxToRem(45)}`,
+                    height: `${pxToRem(45)}`,
                   }}
                 />
               </Box>
@@ -208,7 +69,7 @@ function Home() {
                 186 ta kitob o'qigan
               </Typography>
             </Box>
-            <Box sx={{ padding: "15px 0px" }}>
+            <Box sx={{ padding: `${pxToRem(15)} ${pxToRem(0)}` }}>
               <Typography className="text name text-yellow">
                 Farruxbek Abdullayev
               </Typography>
@@ -236,27 +97,33 @@ function Home() {
             </Box>
           </Box>
         </Box>
-        <Box sx={{ display: "flex", padding: "20px 0px", gap: "40px" }}>
+        <Box
+          sx={{
+            display: "flex",
+            padding: `${pxToRem(20)} ${pxToRem(0)}`,
+            gap: `${pxToRem(40)}`,
+          }}
+        >
           <Box
             sx={{
               width: "fit-content",
               display: "flex",
               flexDirection: "column",
-              gap: "20px",
+              gap: `${pxToRem(20)}`,
             }}
           >
             <Statistics data={audioBookData} />
             <AudioBook />
           </Box>
           <Box sx={{ width: "100%" }}>
-            <CustomTabs value={value} setValue={setValue} data={tabData} />
-            {tabData?.map((item: ITabsData) => {
+            <CustomTabs value={value} setValue={setValue} data={userTabData} />
+            {userTabData?.map((item: ITabsData) => {
               const { index, data } = item;
               return (
                 <CustomTabPanel value={value} index={index | 0}>
-                  <Box className="card-container" sx={{ paddingTop: "40px" }}>
+                  <Box className="card-container">
                     {data?.map((item: IBookData) => {
-                      return <CustomCard data={item} />;
+                      return <CustomBookCard data={item} />;
                     })}
                   </Box>
                 </CustomTabPanel>
