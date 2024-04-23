@@ -1,7 +1,35 @@
 import { IAuthorData, IBookData, ITabsData } from "../../interfaces";
 import { Author1, Author2, Author3, Book1, Author4 } from "../../assets";
 
-const readBooks: IBookData[] = [
+export const readBooks: IBookData[] = [
+  {
+    image: Book1,
+    title: "Dunyoning Ishlari",
+    author: "O'tkir Hoshimov",
+    rate: 4.1,
+    views: 3400,
+  },
+  {
+    image: Book1,
+    title: "Dunyoning Ishlari",
+    author: "O'tkir Hoshimov",
+    rate: 4.1,
+    views: 3400,
+  },
+  {
+    image: Book1,
+    title: "Dunyoning Ishlari",
+    author: "O'tkir Hoshimov",
+    rate: 4.1,
+    views: 3400,
+  },
+  {
+    image: Book1,
+    title: "Dunyoning Ishlari",
+    author: "O'tkir Hoshimov",
+    rate: 4.1,
+    views: 3400,
+  },
   {
     image: Book1,
     title: "Dunyoning Ishlari",

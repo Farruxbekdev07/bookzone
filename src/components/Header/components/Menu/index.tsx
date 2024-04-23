@@ -10,18 +10,21 @@ import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import userImage from "../../assets/images/user-avatar.png";
-import { pxToRem } from "../../utils";
+import { pxToRem } from "../../../../utils";
+import { UserAvatarImage } from "../../../../assets";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
   return (
     <>
       <Box
@@ -42,9 +45,9 @@ export default function AccountMenu() {
           >
             <Avatar
               sx={{ width: pxToRem(40), height: pxToRem(40) }}
-              src={userImage || ""}
+              src={UserAvatarImage || ""}
             >
-              {userImage ? "" : "M"}
+              {UserAvatarImage ? "" : "M"}
             </Avatar>
           </IconButton>
         </Tooltip>

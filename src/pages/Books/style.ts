@@ -1,8 +1,11 @@
 import styled from "styled-components";
-import { colors } from "../../../constants/colors";
-import { pxToRem } from "../../../utils";
-const { textYellow, colorGray, audioBookBg } = colors;
+import { colors } from "../../constants/colors";
+import { pxToRem } from "../../utils";
+const { yellow, white, dark } = colors;
 
+export const BookDetailStyle = styled.div`
+  
+`;
 export const QuoteCard = styled.div`
   width: 100%;
   padding: ${(pxToRem(20), pxToRem(50))};
@@ -40,14 +43,19 @@ export const Flex = styled.div`
   display: flex;
   justify-content: space-between;
   padding: ${pxToRem(50)} ${pxToRem(0)};
-  cursor: pointer;
-
+  
   p {
+    cursor: pointer;
     font-size: ${pxToRem(25)};
   }
 `;
 
 export const DetailCardWrapper = styled.div`
   display: flex;
-  border: 1px solid red;
+  gap: 20px;
+  overflow: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;

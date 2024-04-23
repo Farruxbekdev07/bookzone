@@ -18,7 +18,7 @@ const { BOOKS__DETAILS } = paths;
 
 function CustomBookCard({ data }: { data: IBookData }) {
   const { author, image, rate, title, views } = data;
-  const { textYellow } = colors;
+  const { yellow } = colors;
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -28,7 +28,7 @@ function CustomBookCard({ data }: { data: IBookData }) {
   return (
     <Card
       sx={{
-        maxWidth: 225,
+        minWidth: 225,
         minHeight: 325,
         backgroundColor: "transparent",
         boxShadow: "none",
@@ -50,7 +50,7 @@ function CustomBookCard({ data }: { data: IBookData }) {
           <Typography
             gutterBottom
             variant="h1"
-            sx={{ fontSize: pxToRem(24), color: textYellow, textWrap: "wrap" }}
+            sx={{ fontSize: pxToRem(24), color: yellow, textWrap: "wrap" }}
           >
             {title}
           </Typography>

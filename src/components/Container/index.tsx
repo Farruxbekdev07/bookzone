@@ -5,7 +5,7 @@ import { IContainerData } from "../../interfaces";
 import { pxToRem } from "../../utils";
 
 function Container({ children }: IContainerData) {
-  const { containerBg } = colors;
+  const { background } = colors;
 
   return (
     <Box
@@ -14,7 +14,7 @@ function Container({ children }: IContainerData) {
         top: pxToRem(64),
         padding: pxToRem(80),
         height: "100%",
-        backgroundColor: `${containerBg || "white"}`,
+        backgroundColor: `${background || "white"}`,
       }}
     >
       {children}

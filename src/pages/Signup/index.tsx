@@ -17,7 +17,7 @@ import { pxToRem } from "../../utils";
 function SignUp() {
   const matches = useMediaQuery(`(min-width: ${pxToRem(1000)})`);
   const { SIGN_IN } = paths;
-  const { buttonBg, registerBg } = colors;
+  const { darkBlue, yellow } = colors;
 
   const {
     handleSubmit,
@@ -45,7 +45,7 @@ function SignUp() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          background: `${registerBg}`,
+          background: `${yellow}`,
         }}
       >
         <Box
@@ -204,11 +204,11 @@ function SignUp() {
                 type="submit"
                 sx={{
                   height: `${pxToRem(56)}`,
-                  backgroundColor: `${buttonBg}`,
+                  backgroundColor: `${darkBlue}`,
                   fontSize: `${pxToRem(18)}`,
                   fontWeight: "500",
                   ":hover": {
-                    bgcolor: `${buttonBg}`, // theme.palette.primary.main
+                    bgcolor: `${darkBlue}`, // theme.palette.primary.main
                   },
                 }}
               >

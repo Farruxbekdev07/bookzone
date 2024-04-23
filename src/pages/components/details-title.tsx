@@ -3,7 +3,9 @@ import { Typography } from "@mui/material";
 
 function DetailsTitle({ title }: { title: string }) {
   return (
-    <Typography className="text-yellow details-title">{title || ""}</Typography>
+    <Typography className="text text-yellow text-48 uppercase">
+      {title || ""}
+    </Typography>
   );
 }
 

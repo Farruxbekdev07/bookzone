@@ -12,7 +12,7 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import Nav from "../Nav";
-import AccountMenu from "../Menu";
+import AccountMenu from "./components/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
 import { INavBarData } from "../../interfaces";

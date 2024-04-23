@@ -20,7 +20,7 @@ function CustomTabs({
   setValue: void | any;
   data: Array<ITabsData>;
 }) {
-  const { textYellow } = colors;
+  const { yellow } = colors;
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -41,7 +41,7 @@ function CustomTabs({
           sx={{
             overflow: "auto",
             "& .MuiTab-root.Mui-selected": {
-              color: textYellow,
+              color: yellow,
             },
           }}
           TabIndicatorProps={{

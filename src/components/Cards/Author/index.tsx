@@ -18,7 +18,7 @@ const { AUTHOR__DETAILS } = paths;
 
 function CustomAuthorCard({ data }: { data: IAuthorData }) {
   const { audioBooks, books, dateOfBirth, fullName, image, dateOfDied } = data;
-  const { textYellow } = colors;
+  const { yellow } = colors;
   const navigate = useNavigate();
 
   const handleClick = () => {
@@ -49,7 +49,7 @@ function CustomAuthorCard({ data }: { data: IAuthorData }) {
             variant="h1"
             sx={{
               fontSize: pxToRem(24),
-              color: textYellow,
+              color: yellow,
               textAlign: "center",
             }}
           >

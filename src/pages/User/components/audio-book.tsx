@@ -11,16 +11,12 @@ import audio__note from "../../../assets/images/audio-note.png";
 import MenuIcon from "@mui/icons-material/Menu";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import FastRewindIcon from "@mui/icons-material/FastRewind";
-// import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import FastForwardIcon from "@mui/icons-material/FastForward";
 import audioCard from "../../../assets/images/audio.png";
-import { colors } from "../../../constants/colors";
 import { IAudioBookCard } from "../../../interfaces";
 import { pxToRem } from "../../../utils";
 import { Book1 } from "../../../assets";
-
-const { textYellow, audioCardBg, colorGray, audioBookBg } = colors;
 
 const CustomSliderStyles = {
   "& .MuiSlider-thumb": {
@@ -81,82 +77,28 @@ function AudioBook() {
   };
 
   return (
-    <Box
-      sx={{
-        minWidth: `${pxToRem(400)}`,
-        minHeight: `${pxToRem(300)}`,
-        backgroundColor: audioBookBg,
-        borderRadius: `${pxToRem(14)}`,
-        padding: `${pxToRem(25)}`,
-      }}
-    >
+    <Box className="user-main-audio-books">
       <Box>
-        <Typography className="text text-yellow">Audio Kitob</Typography>
+        <Typography className="text text-yellow text-22">
+          Audio Kitob
+        </Typography>
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: `${pxToRem(20)}`,
-          margin: `${pxToRem(10)} ${pxToRem(0)}`,
-        }}
-      >
-        <img
-          src={Book1 || ""}
-          alt="Book1"
-          style={{
-            width: `${pxToRem(50)}`,
-            height: `${pxToRem(70)}`,
-            objectFit: "cover",
-            borderRadius: `${pxToRem(5)}`,
-          }}
-        />
-        <img
-          src={Book1 || ""}
-          alt="Book1"
-          style={{
-            width: `${pxToRem(70)}`,
-            height: `${pxToRem(100)}`,
-            objectFit: "cover",
-            borderRadius: `${pxToRem(5)}`,
-          }}
-        />
-        <img
-          src={Book1 || ""}
-          alt="Book1"
-          style={{
-            width: `${pxToRem(50)}`,
-            height: `${pxToRem(70)}`,
-            objectFit: "cover",
-            borderRadius: `${pxToRem(5)}`,
-          }}
-        />
+      <Box className="audio-books">
+        <img src={Book1 || ""} alt="Book1" className="book" />
+        <img src={Book1 || ""} alt="Book1" className="book second-book" />
+        <img src={Book1 || ""} alt="Book1" className="book" />
       </Box>
       <Box>
         <Box>
-          <Typography
-            className="text-yellow"
-            sx={{ fontSize: `${pxToRem(16)}`, textAlign: "center" }}
-          >
+          <Typography className="text-yellow text-center text-16">
             Dunyoning ishlari 5-track
           </Typography>
-          <Typography
-            sx={{
-              fontSize: `${pxToRem(14)}`,
-              color: "rgba(255, 255, 255, 0.6)",
-              textAlign: "center",
-            }}
-          >
+          <Typography className="text-14 text-center text-white opacity-60">
             O'tkir Hoshimov
           </Typography>
         </Box>
-        <Box sx={{ width: "100%", marginTop: `${pxToRem(10)}` }}>
-          <img
-            style={{ width: "100%" }}
-            src={audio__note || ""}
-            alt="audio note"
-          />
+        <Box className="audio-note">
+          <img src={audio__note || ""} alt="audio note" />
         </Box>
         <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
           <Slider
@@ -166,22 +108,12 @@ function AudioBook() {
             sx={CustomSliderStyles}
           />
         </Stack>
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <Box
-            sx={{
-              display: "flex",
-              gap: `${pxToRem(40)}`,
-            }}
-          >
+        <Box className="audio-control-container">
+          <Box className="audio-control">
             <IconButton className="iconButton">
               <MenuIcon />
             </IconButton>
-            <Box
-              sx={{
-                display: "flex",
-                gap: `${pxToRem(20)}`,
-              }}
-            >
+            <Box className="audio-control-play">
               <IconButton className="iconButton">
                 <FastRewindIcon />
               </IconButton>
@@ -198,17 +130,7 @@ function AudioBook() {
           </Box>
         </Box>
       </Box>
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: `${pxToRem(20)} ${pxToRem(0)}`,
-          gap: `${pxToRem(10)}`,
-        }}
-      >
+      <Box className="audio-book-card-container">
         {AudioBookData?.map((item: IAudioBookCard) => (
           <AudioBookCard data={item} />
         ))}
@@ -221,46 +143,21 @@ const AudioBookCard = ({ data }: { data: IAudioBookCard }) => {
   const { name, author, image, time, isActive = false } = data;
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        padding: `${pxToRem(10)} ${pxToRem(15)}`,
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: isActive ? audioBookBg : audioCardBg,
-        borderRadius: `${pxToRem(5)}`,
-        width: `${pxToRem(300)}`,
-        cursor: "pointer",
-        position: "relative",
-        border: isActive ? `${pxToRem(2)} solid ${textYellow}` : "none",
-      }}
-    >
+    <Box className={isActive ? "audio-book-card active" : "audio-book-card"}>
       {isActive ? (
         <img src={audioCard} alt="audio card" className="audio-card-img" />
       ) : (
         <></>
       )}
-      <Box
-        sx={{
-          width: `${pxToRem(35)}`,
-          height: `${pxToRem(50)}`,
-          overflow: "hidden",
-        }}
-      >
+      <Box className="audio-book-card-image">
         <img src={image} alt="dunyoning ishlari" className="image" />
       </Box>
       <Box>
-        <Typography sx={{ fontSize: `${pxToRem(14)}`, color: textYellow }}>
-          {name}
-        </Typography>
-        <Typography sx={{ fontSize: `${pxToRem(10)}`, color: colorGray }}>
-          {author}
-        </Typography>
+        <Typography className="card-name">{name}</Typography>
+        <Typography className="text text-10 text-gray">{author}</Typography>
       </Box>
       <Box>
-        <Typography sx={{ fontSize: `${pxToRem(10)}`, color: colorGray }}>
-          {time}
-        </Typography>
+        <Typography className="text text-10 text-gray">{time}</Typography>
       </Box>
     </Box>
   );
