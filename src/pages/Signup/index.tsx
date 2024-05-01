@@ -3,28 +3,50 @@ import {
   Box,
   Button,
   FormControl,
+  MenuItem,
   TextField,
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import signUpImage from "../../assets/images/signup-image.png";
-import { colors } from "../../constants/colors";
-import {
-  useForm,
-  Controller,
-  FieldValues,
-} from "react-hook-form";
+import { useForm, Controller, FieldValues } from "react-hook-form";
 import { Link } from "react-router-dom";
 import paths from "../../constants/paths";
+import { pxToRem } from "../../utils";
+import { RegisterComponent } from "../Styles/style";
+import { SignUpImage } from "../../assets";
+import { useMutation } from "@tanstack/react-query";
+import { api } from "../../utils/api";
+import { postData } from "../../utils/post";
+import RoleSelect from "../../components/Select";
+const { baseUrl, registerApi } = api;
 
 function SignUp() {
-  const matches = useMediaQuery("(min-width:1000px)");
-  const { SIGN_IN } = paths;
-  const { buttonBg, registerBg } = colors;
+  const apiUrl = baseUrl + registerApi;
+
+  const user = {
+    firstName: "Sanjar",
+    lastName: "Abduraimov",
+    phone: +998990134034,
+    email: "sanjarbekweb@gmail.com",
+    password: "43678yrwiuehruweytr8y348",
+    role: "reader | author",
+    address: "HelloCity",
+    image: "ID",
+    lang: "uz",
+  };
+
+  const { data, error, isSuccess } = useMutation({
+    mutationKey: ["register"],
+    mutationFn: () => postData(apiUrl, user),
+  });
+
+  const matches = useMediaQuery(`(min-width: ${pxToRem(956)})`);
+  const { LOG_IN } = paths;
 
   const {
     handleSubmit,
     control,
+    register,
     formState: { errors },
   } = useForm();
 
@@ -33,189 +55,179 @@ function SignUp() {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: `${matches ? "row" : "column"}`,
-        height: "100vh",
-      }}
-    >
+    <RegisterComponent>
       <Box
-        sx={{
-          width: `${matches ? "50%" : "100%"}`,
-          height: "100%",
-          padding: "100px 40px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          background: `${registerBg}`,
-        }}
+        className={matches ? "register-wrapper row" : "register-wrapper column"}
       >
-        <Box sx={{ width: "100%", maxWidth: "700px", height: "fit-content" }}>
-          <img src={signUpImage} alt="sign up" width={"100%"} />
-        </Box>
-      </Box>
-      <Box
-        sx={{
-          width: `${matches ? "50%" : "100%"}`,
-          height: "100%",
-          display: "flex",
-          padding: "50px 30px",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Box sx={{ maxWidth: "600px", width: "100%" }}>
-          <Box sx={{ width: "100%", marginBottom: "30px" }}>
-            <Typography sx={{ fontSize: "36px", fontWeight: "900" }}>
-              Sign up
-            </Typography>
-            <Typography sx={{ fontSize: "13px", fontWeight: "400" }}>
-              Already have an account?{" "}
-              <Link
-                to={SIGN_IN}
-                style={{ textDecoration: "none", color: "blue" }}
-              >
-                Sign in
-              </Link>
-            </Typography>
+        <Box
+          className={
+            matches
+              ? "register-image-wrapper w-50"
+              : "register-image-wrapper w-100"
+          }
+        >
+          <Box className="register-image">
+            <img src={SignUpImage} alt="sign up" />
           </Box>
-          <form
-            onSubmit={handleSubmit(handleFinish)}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              gap: "20px",
-            }}
-          >
-            <Controller
-              name="firstName"
-              rules={{
-                required: true,
-              }}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <FormControl fullWidth>
-                    <TextField
-                      label={"First name"}
-                      {...field}
-                      error={!!errors[field.name]}
-                      helperText={
-                        !!errors[field.name] && "Please enter your first name!"
-                      }
-                    />
-                  </FormControl>
-                );
-              }}
-            />
-            <Controller
-              name="lastName"
-              rules={{
-                required: true,
-              }}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <FormControl fullWidth>
-                    <TextField
-                      label={"Last name"}
-                      {...field}
-                      error={!!errors[field.name]}
-                      helperText={
-                        !!errors[field.name] && "Please enter your last name!"
-                      }
-                    />
-                  </FormControl>
-                );
-              }}
-            />
-            <Controller
-              name="phone"
-              rules={{
-                required: true,
-              }}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <FormControl fullWidth>
-                    <TextField
-                      label={"Phone"}
-                      {...field}
-                      error={!!errors[field.name]}
-                      helperText={
-                        !!errors[field.name] && "Please enter your phone!"
-                      }
-                    />
-                  </FormControl>
-                );
-              }}
-            />
-            <Controller
-              name="email"
-              rules={{
-                required: true,
-              }}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <FormControl fullWidth>
-                    <TextField
-                      label={"Email"}
-                      {...field}
-                      error={!!errors[field.name]}
-                      helperText={
-                        !!errors[field.name] && "Please enter your email!"
-                      }
-                    />
-                  </FormControl>
-                );
-              }}
-            />
-            <Controller
-              name="password"
-              rules={{
-                required: true,
-              }}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <FormControl fullWidth>
-                    <TextField
-                      label={"Password"}
-                      {...field}
-                      error={!!errors[field.name]}
-                      helperText={
-                        !!errors[field.name] && "Please enter your password!"
-                      }
-                    />
-                  </FormControl>
-                );
-              }}
-            />
-            <Box>
-              <Button
-                variant="contained"
-                fullWidth
-                type="submit"
-                sx={{
-                  height: "56px",
-                  backgroundColor: `${buttonBg}`,
-                  fontSize: "18px",
-                  fontWeight: "500",
-                  ":hover": {
-                    bgcolor: `${buttonBg}`, // theme.palette.primary.main
-                  },
-                }}
-              >
-                Next step
-              </Button>
+        </Box>
+        <Box
+          className={
+            matches
+              ? "register-form-wrapper w-50"
+              : "register-form-wrapper w-100"
+          }
+        >
+          <Box className="register-form">
+            <Box className="register-form-title">
+              <Typography className="register-title">Sign Up</Typography>
+              <Typography className="register-link">
+                Already have an account? <Link to={LOG_IN}>Log In</Link>
+              </Typography>
             </Box>
-          </form>
+            <form onSubmit={handleSubmit(handleFinish)}>
+              <Controller
+                name="firstName"
+                rules={{
+                  required: true,
+                }}
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <FormControl fullWidth>
+                      <TextField
+                        label={"First name"}
+                        {...field}
+                        error={!!errors[field.name]}
+                        helperText={
+                          !!errors[field.name] &&
+                          "Please enter your first name!"
+                        }
+                      />
+                    </FormControl>
+                  );
+                }}
+              />
+              <Controller
+                name="lastName"
+                rules={{
+                  required: true,
+                }}
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <FormControl fullWidth>
+                      <TextField
+                        label={"Last name"}
+                        {...field}
+                        error={!!errors[field.name]}
+                        helperText={
+                          !!errors[field.name] && "Please enter your last name!"
+                        }
+                      />
+                    </FormControl>
+                  );
+                }}
+              />
+              <Controller
+                name="phone"
+                rules={{
+                  required: true,
+                }}
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <FormControl fullWidth>
+                      <TextField
+                        label={"Phone"}
+                        {...field}
+                        error={!!errors[field.name]}
+                        helperText={
+                          !!errors[field.name] && "Please enter your phone!"
+                        }
+                      />
+                    </FormControl>
+                  );
+                }}
+              />
+              <Controller
+                name="email"
+                rules={{
+                  required: true,
+                }}
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <FormControl fullWidth>
+                      <TextField
+                        label={"Email"}
+                        {...field}
+                        error={!!errors[field.name]}
+                        helperText={
+                          !!errors[field.name] && "Please enter your email!"
+                        }
+                      />
+                    </FormControl>
+                  );
+                }}
+              />
+              <Controller
+                name="password"
+                rules={{
+                  required: true,
+                }}
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <FormControl fullWidth>
+                      <TextField
+                        type="password"
+                        label={"Password"}
+                        {...field}
+                        error={!!errors[field.name]}
+                        helperText={
+                          !!errors[field.name] && "Please enter your password!"
+                        }
+                      />
+                    </FormControl>
+                  );
+                }}
+              />
+              <Controller
+                name="address"
+                rules={{
+                  required: true,
+                }}
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <FormControl fullWidth>
+                      <TextField
+                        label={"Address"}
+                        {...field}
+                        error={!!errors[field.name]}
+                        helperText={
+                          !!errors[field.name] && "Please enter your address!"
+                        }
+                      />
+                    </FormControl>
+                  );
+                }}
+              />
+              <RoleSelect
+                control={control}
+                errors={errors}
+                defaultValue="reader"
+              />
+              <Box>
+                <Button variant="contained" fullWidth type="submit">
+                  Sign Up
+                </Button>
+              </Box>
+            </form>
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </RegisterComponent>
   );
 }
 

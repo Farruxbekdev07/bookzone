@@ -10,20 +10,33 @@ import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import userImage from "../../assets/images/user-avatar.png";
+import { pxToRem } from "../../../../utils";
+import { UserAvatarImage } from "../../../../assets";
+import { AccountMenuComponent } from "../style";
+import { useNavigate } from "react-router-dom";
+import paths from "../../../../constants/paths";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const { PROFILE, SETTINGS, REGISTER } = paths;
+  const navigate = useNavigate();
+
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
+
   return (
-    <>
-      <Box sx={{ display: "flex", alignItems: "center", height: "64px", textAlign: "center" }}>
+    <AccountMenuComponent>
+      <Box className="tooltip">
         <Tooltip title="Account settings">
           <IconButton
             onClick={handleClick}
@@ -32,8 +45,8 @@ export default function AccountMenu() {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar sx={{ width: 40, height: 40 }} src={userImage || ""}>
-              {userImage ? "" : "M"}
+            <Avatar className="avatar" src={UserAvatarImage || ""}>
+              {UserAvatarImage ? "" : "M"}
             </Avatar>
           </IconButton>
         </Tooltip>
@@ -48,11 +61,13 @@ export default function AccountMenu() {
           elevation: 0,
           sx: {
             overflow: "visible",
-            filter: "drop-shadow(0px 2px 8px rgba(0,0,0,0.32))",
+            filter: `rop-shadow(${pxToRem(0)} ${pxToRem(2)} ${pxToRem(
+              8
+            )} rgba(0,0,0,0.32))`,
             mt: 1.5,
             "& .MuiAvatar-root": {
-              width: 32,
-              height: 32,
+              width: pxToRem(32),
+              height: pxToRem(32),
               ml: -0.5,
               mr: 1,
             },
@@ -60,10 +75,10 @@ export default function AccountMenu() {
               content: '""',
               display: "block",
               position: "absolute",
-              top: 0,
-              right: 14,
-              width: 10,
-              height: 10,
+              top: pxToRem(0),
+              right: pxToRem(14),
+              width: pxToRem(10),
+              height: pxToRem(10),
               bgcolor: "background.paper",
               transform: "translateY(-50%) rotate(45deg)",
               zIndex: 0,
@@ -73,20 +88,20 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleClose}>
-          <Avatar /> Profile
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar /> My account
+        <MenuItem onClick={() => handleNavigate(PROFILE)}>
+          <Avatar className="avatar" src={UserAvatarImage || ""}>
+            {UserAvatarImage ? "" : "M"}
+          </Avatar>{" "}
+          Profile
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => handleNavigate(REGISTER)}>
           <ListItemIcon>
             <PersonAdd fontSize="small" />
           </ListItemIcon>
           Add another account
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => handleNavigate(SETTINGS)}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
@@ -99,6 +114,6 @@ export default function AccountMenu() {
           Logout
         </MenuItem>
       </Menu>
-    </>
+    </AccountMenuComponent>
   );
 }

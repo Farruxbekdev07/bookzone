@@ -12,42 +12,37 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import Nav from "../Nav";
-import AccountMenu from "../Menu";
+import AccountMenu from "./components/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import { Link } from "react-router-dom";
-import badiiyat from "../../assets/images/Badiiyat.png";
 import { INavBarData } from "../../interfaces";
+import paths from "../../constants/paths";
+import { pxToRem } from "../../utils";
+import { BookLogo } from "../../assets";
+import { HeaderComponent } from "./style";
+
+const { AUTHOR, BOOKS, USER } = paths;
 
 const data = [
   {
-    value: "Bosh sahifa",
+    value: "Home",
     index: 0,
-    url: "/",
+    path: USER,
   },
   {
-    value: "Nasr",
+    value: "Authors",
     index: 1,
-    url: "/signup",
+    path: AUTHOR,
   },
   {
-    value: "Nazm",
+    value: "Books",
     index: 2,
-    url: "/nazm",
-  },
-  {
-    value: "Maqolalar",
-    index: 3,
-    url: "/maqolalar",
-  },
-  {
-    value: "Forum",
-    index: 4,
-    url: "/forum",
+    path: BOOKS,
   },
 ];
 
 function Header() {
-  const matches = useMediaQuery("(min-width:956px)");
+  const matches = useMediaQuery(`(min-width: ${pxToRem(956)})`);
   const [open, setOpen] = useState(false);
 
   const handleClick = () => {
@@ -55,63 +50,36 @@ function Header() {
   };
 
   return (
-    <AppBar
-      position="fixed"
-      sx={{
-        background: "#191919",
-        padding: "0px 56px",
-        borderBottom: "1px solid rgba(255, 255, 255, 0.22)",
-      }}
-    >
-      <Toolbar
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "start",
-        }}
-      >
-        <Box
-          sx={{
-            height: "64px",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <img src={badiiyat || ""} />
-        </Box>
-        <Box
-          sx={{
-            display: "flex",
-            width: "70%",
-            justifyContent: `${matches ? "space-between" : "end"}`,
-            gap: "20px",
-          }}
-        >
+    <HeaderComponent>
+      <AppBar className="app-bar">
+        <Toolbar className="tool-bar">
+          <Box className="logo">
+            <img src={BookLogo || ""} />
+          </Box>
           {matches ? <Nav data={data} /> : ""}
-          <Box sx={{ display: "flex", gap: "20px" }}>
-            {matches ? (
-              <></>
-            ) : (
+
+          {matches ? (
+            <AccountMenu />
+          ) : (
+            <Box sx={{ display: "flex" }}>
               <List>
                 <ListItem button>
                   <Button onClick={handleClick}>
                     <MenuIcon />
-                    {/* {open ? <ExpandLess /> : <ExpandMore />} */}
                   </Button>
                 </ListItem>
                 <Collapse in={open} timeout="auto" unmountOnExit>
                   <List component="div" disablePadding>
                     {data?.map((item: INavBarData) => {
-                      const { url, value } = item;
+                      const { path, value } = item;
                       return (
                         <ListItem button>
                           <Link
-                            to={url}
+                            to={path}
                             style={{
                               textDecoration: "none",
                               color: "white",
-                              fontSize: "18px",
+                              fontSize: pxToRem(18),
                             }}
                           >
                             <ListItemText primary={value} />
@@ -122,12 +90,12 @@ function Header() {
                   </List>
                 </Collapse>
               </List>
-            )}
-            <AccountMenu />
-          </Box>
-        </Box>
-      </Toolbar>
-    </AppBar>
+              <AccountMenu />
+            </Box>
+          )}
+        </Toolbar>
+      </AppBar>
+    </HeaderComponent>
   );
 }
 

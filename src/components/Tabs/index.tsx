@@ -1,9 +1,9 @@
 import React from "react";
 import { Box } from "@mui/material";
-import { ITabPanelProps } from "../../interfaces";
+import { ITabPanel } from "../../interfaces";
 
-function CustomTabPanel(props: ITabPanelProps) {
-  const { children, value, index, ...other } = props;
+function CustomTabPanel(data: ITabPanel) {
+  const { children, value, index, ...other } = data;
 
   return (
     <Box

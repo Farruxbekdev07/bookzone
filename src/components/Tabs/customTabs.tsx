@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Tab, Tabs } from "@mui/material";
 import { colors } from "../../constants/colors";
 import { ITabsData } from "../../interfaces";
+import { pxToRem } from "../../utils";
 
 function a11yProps(index: number) {
   return {
@@ -19,7 +20,7 @@ function CustomTabs({
   setValue: void | any;
   data: Array<ITabsData>;
 }) {
-  const { textYellow } = colors;
+  const { yellow } = colors;
 
   const handleChange = (event: React.SyntheticEvent, newValue: number) => {
     setValue(newValue);
@@ -40,7 +41,7 @@ function CustomTabs({
           sx={{
             overflow: "auto",
             "& .MuiTab-root.Mui-selected": {
-              color: textYellow,
+              color: yellow,
             },
           }}
           TabIndicatorProps={{
@@ -55,8 +56,8 @@ function CustomTabs({
               <Tab
                 sx={{
                   color: "rgba(255, 255, 255, 0.6)",
-                  fontSize: "18px",
-                  borderRadius: "5px",
+                  fontSize: pxToRem(18),
+                  borderRadius: pxToRem(5),
                 }}
                 label={label || ""}
                 {...a11yProps(index || 0)}

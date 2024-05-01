@@ -1,20 +1,14 @@
 import React from "react";
 import "./App.css";
 import { Route, Routes } from "react-router-dom";
-import { privateRoutes } from "./routes";
-import Header from "./components/Header";
+import { routes } from "./routes";
 
 function App() {
   return (
     <div className="App">
-      <Header />
       <Routes>
-        {privateRoutes?.map((route) => (
-          <Route
-            path={route?.path}
-            element={route?.component}
-            key={route?.path}
-          />
+        {routes?.map(({ path, component }) => (
+          <Route path={path} element={component} key={path} />
         ))}
       </Routes>
     </div>

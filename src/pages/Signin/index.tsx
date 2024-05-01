@@ -7,16 +7,16 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import signInImage from "../../assets/images/signin-image.png";
-import { colors } from "../../constants/colors";
 import { useForm, Controller, FieldValues } from "react-hook-form";
 import { Link } from "react-router-dom";
 import paths from "../../constants/paths";
+import { pxToRem } from "../../utils";
+import { RegisterComponent } from "../Styles/style";
+import { SignInImage } from "../../assets";
 
 function SignIn() {
-  const matches = useMediaQuery("(min-width:1000px)");
-  const { SIGN_UP } = paths;
-  const { buttonBg, registerBg } = colors;
+  const matches = useMediaQuery(`(min-width: ${pxToRem(1000)})`);
+  const { REGISTER } = paths;
 
   const {
     handleSubmit,
@@ -29,126 +29,88 @@ function SignIn() {
   };
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        flexDirection: `${matches ? "row" : "column"}`,
-        height: "100vh",
-      }}
-    >
+    <RegisterComponent>
       <Box
-        sx={{
-          width: `${matches ? "50%" : "100%"}`,
-          height: "100%",
-          padding: "100px 40px",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          background: `${registerBg}`,
-        }}
+        className={matches ? "register-wrapper row" : "register-wrapper column"}
       >
-        <Box sx={{ width: "100%", maxWidth: "700px", height: "fit-content" }}>
-          <img src={signInImage} alt="sign up" width={"100%"} />
-        </Box>
-      </Box>
-      <Box
-        sx={{
-          width: `${matches ? "50%" : "100%"}`,
-          height: "100%",
-          display: "flex",
-          padding: "50px 30px",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Box sx={{ maxWidth: "600px", width: "100%" }}>
-          <Box sx={{ width: "100%", marginBottom: "30px" }}>
-            <Typography sx={{ fontSize: "36px", fontWeight: "900" }}>
-              Sign in
-            </Typography>
-            <Typography sx={{ fontSize: "13px", fontWeight: "400" }}>
-              Do not you have an account?{" "}
-              <Link
-                to={SIGN_UP}
-                style={{ textDecoration: "none", color: "blue" }}
-              >
-                Sign up
-              </Link>
-            </Typography>
+        <Box
+          className={
+            matches
+              ? "register-image-wrapper w-50"
+              : "register-image-wrapper w-100"
+          }
+        >
+          <Box className="register-image">
+            <img src={SignInImage} alt="sign in" />
           </Box>
-          <form
-            onSubmit={handleSubmit(handleFinish)}
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              width: "100%",
-              gap: "20px",
-            }}
-          >
-            <Controller
-              name="email"
-              rules={{
-                required: true,
-              }}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <FormControl fullWidth>
-                    <TextField
-                      label={"Email"}
-                      {...field}
-                      error={!!errors[field.name]}
-                      helperText={
-                        !!errors[field.name] && "Please enter your email!"
-                      }
-                    />
-                  </FormControl>
-                );
-              }}
-            />
-            <Controller
-              name="password"
-              rules={{
-                required: true,
-              }}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <FormControl fullWidth>
-                    <TextField
-                      label={"Password"}
-                      {...field}
-                      error={!!errors[field.name]}
-                      helperText={
-                        !!errors[field.name] && "Please enter your password!"
-                      }
-                    />
-                  </FormControl>
-                );
-              }}
-            />
-            <Box>
-              <Button
-                variant="contained"
-                fullWidth
-                type="submit"
-                sx={{
-                  height: "56px",
-                  backgroundColor: `${buttonBg}`,
-                  fontSize: "18px",
-                  fontWeight: "500",
-                  ":hover": {
-                    bgcolor: `${buttonBg}`, // theme.palette.primary.main
-                  },
-                }}
-              >
-                Next step
-              </Button>
+        </Box>
+        <Box
+          className={
+            matches
+              ? "register-form-wrapper w-50"
+              : "register-form-wrapper w-100"
+          }
+        >
+          <Box className="register-form">
+            <Box className="register-form-title">
+              <Typography className="register-title">Log In</Typography>
+              <Typography className="register-link">
+                Do not you have an account? <Link to={REGISTER}>Sign Up</Link>
+              </Typography>
             </Box>
-          </form>
+            <form onSubmit={handleSubmit(handleFinish)}>
+              <Controller
+                name="email"
+                rules={{
+                  required: true,
+                }}
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <FormControl fullWidth>
+                      <TextField
+                        label={"Email"}
+                        {...field}
+                        error={!!errors[field.name]}
+                        helperText={
+                          !!errors[field.name] && "Please enter your email!"
+                        }
+                      />
+                    </FormControl>
+                  );
+                }}
+              />
+              <Controller
+                name="password"
+                rules={{
+                  required: true,
+                }}
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <FormControl fullWidth>
+                      <TextField
+                        label={"Password"}
+                        {...field}
+                        error={!!errors[field.name]}
+                        helperText={
+                          !!errors[field.name] && "Please enter your password!"
+                        }
+                      />
+                    </FormControl>
+                  );
+                }}
+              />
+              <Box>
+                <Button variant="contained" fullWidth type="submit">
+                  Log In
+                </Button>
+              </Box>
+            </form>
+          </Box>
         </Box>
       </Box>
-    </Box>
+    </RegisterComponent>
   );
 }
 

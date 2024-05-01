@@ -7,20 +7,16 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import book from "../../../assets/images/dunyo-ishlari.png";
 import audio__note from "../../../assets/images/audio-note.png";
 import MenuIcon from "@mui/icons-material/Menu";
 import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import FastRewindIcon from "@mui/icons-material/FastRewind";
-// import PauseIcon from "@mui/icons-material/Pause";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import FastForwardIcon from "@mui/icons-material/FastForward";
-import bookImage from "../../../assets/images/dunyo-ishlari.png";
 import audioCard from "../../../assets/images/audio.png";
-import { colors } from "../../../constants/colors";
 import { IAudioBookCard } from "../../../interfaces";
-
-const { textYellow, audioCardBg, colorGray, audioBookBg } = colors;
+import { pxToRem } from "../../../utils";
+import { Book1 } from "../../../assets";
 
 const CustomSliderStyles = {
   "& .MuiSlider-thumb": {
@@ -36,36 +32,36 @@ const CustomSliderStyles = {
     color: "#fff",
   },
   "& .css-1as9v07-MuiSlider-thumb": {
-    width: "21px",
-    height: "7px",
-    borderRadius: "18px",
+    width: `${pxToRem(21)}`,
+    height: `${pxToRem(7)}`,
+    borderRadius: `${pxToRem(18)}`,
   },
 };
 
 const AudioBookData = [
   {
-    image: bookImage,
+    image: Book1,
     name: "Dunyoning ishlari 5-track",
     author: "O’tkir Hoshimov",
     time: "02:22:18",
     isActive: true,
   },
   {
-    image: bookImage,
+    image: Book1,
     name: "Dunyoning ishlari 4-track",
     author: "O’tkir Hoshimov",
     time: "02:16:09",
     isActive: false,
   },
   {
-    image: bookImage,
+    image: Book1,
     name: "Dunyoning ishlari 3-track",
     author: "O’tkir Hoshimov",
     time: "02:09:05",
     isActive: false,
   },
   {
-    image: bookImage,
+    image: Book1,
     name: "Dunyoning ishlari 2-track",
     author: "O’tkir Hoshimov",
     time: "01:13:23",
@@ -81,82 +77,28 @@ function AudioBook() {
   };
 
   return (
-    <Box
-      sx={{
-        minWidth: "400px",
-        minHeight: "300px",
-        backgroundColor: audioBookBg,
-        borderRadius: "14px",
-        padding: "25px",
-      }}
-    >
+    <Box className="user-main-audio-books">
       <Box>
-        <Typography className="text text-yellow">Audio Kitob</Typography>
+        <Typography className="text text-yellow text-22">
+          Audio Kitob
+        </Typography>
       </Box>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: "20px",
-          margin: "10px 0px",
-        }}
-      >
-        <img
-          src={book || ""}
-          alt="book"
-          style={{
-            width: "50px",
-            height: "70px",
-            objectFit: "cover",
-            borderRadius: "5px",
-          }}
-        />
-        <img
-          src={book || ""}
-          alt="book"
-          style={{
-            width: "70px",
-            height: "100px",
-            objectFit: "cover",
-            borderRadius: "5px",
-          }}
-        />
-        <img
-          src={book || ""}
-          alt="book"
-          style={{
-            width: "50px",
-            height: "70px",
-            objectFit: "cover",
-            borderRadius: "5px",
-          }}
-        />
+      <Box className="audio-books">
+        <img src={Book1 || ""} alt="Book1" className="book" />
+        <img src={Book1 || ""} alt="Book1" className="book second-book" />
+        <img src={Book1 || ""} alt="Book1" className="book" />
       </Box>
       <Box>
         <Box>
-          <Typography
-            className="text-yellow"
-            sx={{ fontSize: "16px", textAlign: "center" }}
-          >
+          <Typography className="text-yellow text-center text-16">
             Dunyoning ishlari 5-track
           </Typography>
-          <Typography
-            sx={{
-              fontSize: "14px",
-              color: "rgba(255, 255, 255, 0.6)",
-              textAlign: "center",
-            }}
-          >
+          <Typography className="text-14 text-center text-white opacity-60">
             O'tkir Hoshimov
           </Typography>
         </Box>
-        <Box sx={{ width: "100%", marginTop: "10px" }}>
-          <img
-            style={{ width: "100%" }}
-            src={audio__note || ""}
-            alt="audio note"
-          />
+        <Box className="audio-note">
+          <img src={audio__note || ""} alt="audio note" />
         </Box>
         <Stack spacing={2} direction="row" sx={{ mb: 1 }} alignItems="center">
           <Slider
@@ -166,22 +108,12 @@ function AudioBook() {
             sx={CustomSliderStyles}
           />
         </Stack>
-        <Box sx={{ display: "flex", justifyContent: "center" }}>
-          <Box
-            sx={{
-              display: "flex",
-              gap: "40px",
-            }}
-          >
+        <Box className="audio-control-container">
+          <Box className="audio-control">
             <IconButton className="iconButton">
               <MenuIcon />
             </IconButton>
-            <Box
-              sx={{
-                display: "flex",
-                gap: "20px",
-              }}
-            >
+            <Box className="audio-control-play">
               <IconButton className="iconButton">
                 <FastRewindIcon />
               </IconButton>
@@ -198,17 +130,7 @@ function AudioBook() {
           </Box>
         </Box>
       </Box>
-      <Box
-        sx={{
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          padding: "20px 0px",
-          gap: "10px",
-        }}
-      >
+      <Box className="audio-book-card-container">
         {AudioBookData?.map((item: IAudioBookCard) => (
           <AudioBookCard data={item} />
         ))}
@@ -221,40 +143,21 @@ const AudioBookCard = ({ data }: { data: IAudioBookCard }) => {
   const { name, author, image, time, isActive = false } = data;
 
   return (
-    <Box
-      sx={{
-        display: "flex",
-        padding: "10px 15px",
-        justifyContent: "space-between",
-        alignItems: "center",
-        backgroundColor: isActive ? audioBookBg : audioCardBg,
-        borderRadius: "5px",
-        width: "300px",
-        cursor: "pointer",
-        position: "relative",
-        border: isActive ? `2px solid ${textYellow}` : "none",
-      }}
-    >
+    <Box className={isActive ? "audio-book-card active" : "audio-book-card"}>
       {isActive ? (
         <img src={audioCard} alt="audio card" className="audio-card-img" />
       ) : (
         <></>
       )}
-      <Box sx={{ width: "35px", height: "50px", overflow: "hidden" }}>
+      <Box className="audio-book-card-image">
         <img src={image} alt="dunyoning ishlari" className="image" />
       </Box>
       <Box>
-        <Typography sx={{ fontSize: "14px", color: textYellow }}>
-          {name}
-        </Typography>
-        <Typography sx={{ fontSize: "10px", color: colorGray }}>
-          {author}
-        </Typography>
+        <Typography className="card-name">{name}</Typography>
+        <Typography className="text text-10 text-gray">{author}</Typography>
       </Box>
       <Box>
-        <Typography sx={{ fontSize: "10px", color: colorGray }}>
-          {time}
-        </Typography>
+        <Typography className="text text-10 text-gray">{time}</Typography>
       </Box>
     </Box>
   );

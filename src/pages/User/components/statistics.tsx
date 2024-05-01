@@ -1,94 +1,47 @@
 import React from "react";
 import { Box, Button, Typography } from "@mui/material";
-import book from "../../../assets/images/book.png";
 import RefreshIcon from "@mui/icons-material/Refresh";
-import { colors } from "../../../constants/colors";
 import WindowIcon from "@mui/icons-material/Window";
 import { IStatisticsData } from "../../../interfaces";
+import { Book1 } from "../../../assets";
 
 function Statistics({ data }: { data: Array<IStatisticsData> }) {
-  const { textYellow, colorGray, audioBookBg } = colors;
-
   return (
     <>
-      <Box
-        sx={{
-          minWidth: "400px",
-          display: "flex",
-          flexDirection: "column",
-          gap: "30px",
-          padding: "25px",
-          backgroundColor: audioBookBg,
-          borderRadius: "14px",
-        }}
-      >
-        <Box className="flex">
-          <Typography className="text text-yellow">
+      <Box className="user-main-statistics">
+        <Box className="statistics-title">
+          <Typography className="text text-yellow text-22">
             Hozir o'qilmoqda..
           </Typography>
           <WindowIcon className="grid-icon" />
         </Box>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: "16px" }}>
+        <Box className="statistics-card-wrapper">
           {data?.map((item: IStatisticsData) => (
-            <Box
-              className="flex"
-              sx={{ width: "100%", gap: "30px", alignItems: "end" }}
-            >
+            <Box className="statistics-card">
               <Box>
                 <img
-                  src={item?.image || book}
+                  src={item?.image || Book1}
                   alt="book"
-                  style={{ width: "35px", height: "50px", objectFit: "cover" }}
+                  className="card-image"
                 />
               </Box>
               <Box>
-                <Box className="flex" sx={{ justifyContent: "space-between" }}>
-                  <Typography sx={{ fontSize: "16px", color: "white" }}>
-                    {item?.title}
-                  </Typography>
-                  <Typography sx={{ color: colorGray, fontSize: "12px" }}>
+                <Box className="card-content">
+                  <Typography className="text title">{item?.title}</Typography>
+                  <Typography className="progress">
                     {item?.progress}%
                   </Typography>
                 </Box>
-                <Box
-                  className="flex"
-                  sx={{
-                    width: "100%",
-                    justifyContent: "space-between",
-                    gap: "20px",
-                    marginTop: "10px",
-                  }}
-                >
-                  <Box
-                    sx={{
-                      width: "180px",
-                      height: "25px",
-                      backgroundColor: "white",
-                      borderRadius: "5px",
-                    }}
-                  >
+                <Box className="progress-bar-wrapper">
+                  <Box className="progress-bar">
                     <Box
+                      className="progress"
                       sx={{
-                        height: "100%",
                         width: `${item?.progress}%`,
-                        backgroundColor: textYellow,
-                        borderRadius: "5px",
                       }}
                     ></Box>
                   </Box>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      height: "25px",
-                      fontSize: "10px",
-                      width: "100px",
-                      backgroundColor: textYellow,
-                      color: "rgba(60, 39, 16, 1)",
-                      ":hover": {
-                        bgcolor: textYellow,
-                      },
-                    }}
-                  >
+                  <Button className="progress-bar-button" variant="contained">
                     Yangilash <RefreshIcon />
                   </Button>
                 </Box>
@@ -96,18 +49,7 @@ function Statistics({ data }: { data: Array<IStatisticsData> }) {
             </Box>
           ))}
         </Box>
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: textYellow,
-            width: "100%",
-            height: "45px",
-            color: "rgba(100, 81, 61, 1)",
-            ":hover": {
-              bgcolor: textYellow,
-            },
-          }}
-        >
+        <Button className="statistics-button" variant="contained">
           Barchasini ko'rish
         </Button>
       </Box>

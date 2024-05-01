@@ -21,18 +21,14 @@ const BooksDetails = lazyWithPreload(
 );
 const User = lazyWithPreload(() => import("../pages/User/index"));
 const Profile = lazyWithPreload(() => import("../pages/User/Profile/index"));
-const Security = lazyWithPreload(
-  () => import("../pages/User/Security/index")
-);
-const Settings = lazyWithPreload(
-  () => import("../pages/User/Settings/index")
-);
+const Security = lazyWithPreload(() => import("../pages/User/Security/index"));
+const Settings = lazyWithPreload(() => import("../pages/User/Settings/index"));
 
 const {
   BOOKS,
   PROFILE,
-  SIGN_IN,
-  SIGN_UP,
+  LOG_IN,
+  REGISTER,
   AUTHOR,
   AUTHOR__DETAILS,
   BOOKS__DETAILS,
@@ -46,19 +42,17 @@ const {
 SignIn.preload();
 SignUp.preload();
 
-export const publicRoutes: IRoute[] = [
+export const routes: IRoute[] = [
   {
-    path: SIGN_IN,
+    path: LOG_IN,
     key: "signin",
     component: <SignIn />,
   },
   {
-    path: SIGN_UP,
+    path: REGISTER,
     key: "signup",
     component: <SignUp />,
   },
-];
-export const privateRoutes: IRoute[] = [
   {
     path: "/",
     key: "user",
