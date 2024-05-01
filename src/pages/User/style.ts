@@ -3,7 +3,18 @@ import { UserBackgroundImage } from "../../assets";
 import { pxToRem } from "../../utils";
 import { colors } from "../../constants/colors";
 
-const { background, yellow, dark, white, gray } = colors;
+const {
+  background,
+  yellow,
+  dark,
+  white,
+  gray,
+  lightBlue,
+  blue,
+  textBlue,
+  textDarkBlue,
+  darkBlue,
+} = colors;
 
 export const UserInfoStyles = styled.div`
   .info {
@@ -249,6 +260,48 @@ export const UserInfoStyles = styled.div`
 
     .user-main-tabs {
       width: 100%;
+    }
+  }
+`;
+
+export const UserHeaderStyles = styled.header`
+  background-color: rgba(0, 0, 0, 0.08);
+
+  .list {
+    padding: 0;
+    display: flex;
+    gap: ${pxToRem(4)};
+    height: ${pxToRem(80)};
+
+    .list-item {
+      display: flex;
+      font-weight: 600;
+      align-items: center;
+      gap: ${pxToRem(10)};
+      color: ${textDarkBlue};
+      font-size: ${pxToRem(16)};
+      max-width: ${pxToRem(300)};
+      background-color: ${lightBlue};
+
+      .list-item-number {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 600;
+        color: ${textBlue};
+        width: ${pxToRem(35)};
+        height: ${pxToRem(35)};
+        background-color: ${blue};
+        border-radius: ${pxToRem(4)};
+      }
+    }
+    .active {
+      background-color: ${white};
+
+      .active-item {
+        background-color: ${darkBlue};
+        color: ${white};
+      }
     }
   }
 `;

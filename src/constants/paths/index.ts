@@ -1,6 +1,6 @@
 const paths = {
-  SIGN_IN: "/",
-  SIGN_UP: "/signup",
+  LOG_IN: "/login",
+  REGISTER: "/register",
 
   AUTHOR: "/author",
   AUTHOR__DETAILS: "/author/view",

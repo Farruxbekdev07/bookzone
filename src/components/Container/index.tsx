@@ -13,8 +13,10 @@ function Container({ children }: IContainerData) {
       sx={{
         top: pxToRem(64),
         padding: pxToRem(80),
+        width: "100%",
         height: "100%",
-        backgroundColor: `${background || "white"}`,
+        backgroundColor: `${background}`,
+        minWidth: "90vw",
       }}
     >
       {children}

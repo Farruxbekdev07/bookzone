@@ -48,3 +48,14 @@ export interface IAuthorData {
   books?: number;
   audioBooks?: number;
 }
+export interface IUserData {
+  image?: File | string | any;
+  firstName: string;
+  lastName?: string;
+  dateOfBirth?: number | string | any;
+  phone: number | string;
+  password: number | string;
+  email: string;
+  address?: string;
+  lang?: string;
+}

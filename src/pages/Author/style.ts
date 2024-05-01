@@ -64,7 +64,15 @@ export const HomePageStyles = styled.div`
     padding: ${pxToRem(40)} ${pxToRem(0)};
 
     .home-page-tabs {
+      position: relative;
       padding: ${pxToRem(20)} ${pxToRem(0)};
+
+      .create-book {
+        position: absolute;
+        right: 0;
+        padding: ${pxToRem(12)} ${pxToRem(36)};
+        background-color: ${yellow};
+      }
     }
   }
 `;

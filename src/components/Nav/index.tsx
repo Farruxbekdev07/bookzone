@@ -1,58 +1,33 @@
-import { Box, Tab, Tabs } from "@mui/material";
 import React from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Box, List, ListItem } from "@mui/material";
+import { Link, useLocation } from "react-router-dom";
 import { INavBarData } from "../../interfaces";
-import { pxToRem } from "../../utils";
-
-function a11yProps(index: number) {
-  return {
-    id: `simple-tab-${index}`,
-    "aria-controls": `simple-tabpanel-${index}`,
-  };
-}
+import { Navigation } from "./style";
 
 function Nav({ data }: { data: Array<INavBarData> }) {
-  const [value, setValue] = React.useState(0);
-  const navigate = useNavigate();
   const { pathname } = useLocation();
 
-  const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-    setValue(newValue);
-  };
-
   return (
-    <Box sx={{ height: "100%" }}>
-      <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="basic tabs example"
-          sx={{
-            overflow: "auto",
-            "& .MuiTab-root.Mui-selected": {
-              color: "white",
-            },
-          }}
-          TabIndicatorProps={{
-            style: {
-              backgroundColor: "white",
-            },
-          }}
-        >
-          {data?.map((item: INavBarData) => {
-            const { index, path, value } = item;
+    <Navigation>
+      <Box>
+        <List className="list">
+          {data?.map(({ path, value }) => {
             return (
-              <Tab
-                sx={{ color: "white", height: pxToRem(64) }}
-                label={value || ""}
-                onClick={() => navigate(path)}
-                {...a11yProps(index)}
-              />
+              <ListItem
+                button
+                className={
+                  pathname === path || pathname?.includes(path)
+                    ? "list-item active"
+                    : `list-item ${pathname === "/" ? "first-child-active" : ""}`
+                }
+              >
+                <Link to={path || "/"}>{value}</Link>
+              </ListItem>
             );
           })}
-        </Tabs>
+        </List>
       </Box>
-    </Box>
+    </Navigation>
   );
 }
 

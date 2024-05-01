@@ -18,6 +18,8 @@ import BookIcon from "../assets/images/book-icon.png";
 import Headphone from "../assets/images/headphone.png";
 import Phone from "../assets/images/phone.png";
 import QuoteImg from "../assets/images/quote.png";
+import Camera from "../assets/images/camera.png";
+import CreateBookImage from "../assets/images/create-book.png";
 
 export {
   BookLogo,
@@ -40,4 +42,6 @@ export {
   Headphone,
   Phone,
   QuoteImg,
+  Camera,
+  CreateBookImage,
 };

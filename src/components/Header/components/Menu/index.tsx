@@ -12,10 +12,15 @@ import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import { pxToRem } from "../../../../utils";
 import { UserAvatarImage } from "../../../../assets";
+import { AccountMenuComponent } from "../style";
+import { useNavigate } from "react-router-dom";
+import paths from "../../../../constants/paths";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
+  const { PROFILE, SETTINGS, REGISTER } = paths;
+  const navigate = useNavigate();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -25,16 +30,13 @@ export default function AccountMenu() {
     setAnchorEl(null);
   };
 
+  const handleNavigate = (path: string) => {
+    navigate(path);
+  };
+
   return (
-    <>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          height: pxToRem(64),
-          textAlign: "center",
-        }}
-      >
+    <AccountMenuComponent>
+      <Box className="tooltip">
         <Tooltip title="Account settings">
           <IconButton
             onClick={handleClick}
@@ -43,10 +45,7 @@ export default function AccountMenu() {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar
-              sx={{ width: pxToRem(40), height: pxToRem(40) }}
-              src={UserAvatarImage || ""}
-            >
+            <Avatar className="avatar" src={UserAvatarImage || ""}>
               {UserAvatarImage ? "" : "M"}
             </Avatar>
           </IconButton>
@@ -89,20 +88,20 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={handleClose}>
-          <Avatar /> Profile
-        </MenuItem>
-        <MenuItem onClick={handleClose}>
-          <Avatar /> My account
+        <MenuItem onClick={() => handleNavigate(PROFILE)}>
+          <Avatar className="avatar" src={UserAvatarImage || ""}>
+            {UserAvatarImage ? "" : "M"}
+          </Avatar>{" "}
+          Profile
         </MenuItem>
         <Divider />
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => handleNavigate(REGISTER)}>
           <ListItemIcon>
             <PersonAdd fontSize="small" />
           </ListItemIcon>
           Add another account
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={() => handleNavigate(SETTINGS)}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>
@@ -115,6 +114,6 @@ export default function AccountMenu() {
           Logout
         </MenuItem>
       </Menu>
-    </>
+    </AccountMenuComponent>
   );
 }

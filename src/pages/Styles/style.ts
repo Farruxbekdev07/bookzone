@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { colors } from "../../constants/colors";
 import { pxToRem } from "../../utils";
-const { yellow, white, dark, gray } = colors;
+const { yellow, white, dark, gray, darkBlue } = colors;
 
 export const StyledComponent = styled.div`
   .text {
@@ -102,6 +102,12 @@ export const StyledComponent = styled.div`
       font-size: ${pxToRem(32)};
     }
   }
+  .w-100 {
+    width: 100%;
+  }
+  .w-50 {
+    width: 50%;
+  }
   .play {
     padding: 0;
     width: ${pxToRem(40)} !important;
@@ -145,5 +151,92 @@ export const StyledComponent = styled.div`
     color: ${white};
     line-height: ${pxToRem(24)};
     padding: ${pxToRem(15)} ${pxToRem(0)};
+  }
+`;
+
+export const RegisterComponent = styled.div`
+  .register-wrapper {
+    display: flex;
+    height: 100vh;
+
+    .register-image-wrapper {
+      height: 100%;
+      padding: ${pxToRem(100)} ${pxToRem(40)};
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: ${yellow};
+
+      .register-image {
+        width: 100%;
+        max-width: ${pxToRem(700)};
+        height: fit-content;
+
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+    .register-form-wrapper {
+      height: 100%;
+      display: flex;
+      padding: ${pxToRem(50)} ${pxToRem(30)};
+      justify-content: center;
+      align-items: center;
+
+      .register-form {
+        width: 100%;
+        max-width: ${pxToRem(600)};
+
+        .register-form-title {
+          width: 100%;
+          margin-bottom: ${pxToRem(30)};
+
+          .register-title {
+            font-size: ${pxToRem(36)};
+            font-weight: 900;
+          }
+          .register-link {
+            font-size: ${pxToRem(13)};
+            font-weight: 400;
+
+            a {
+              text-decoration: none;
+              color: blue;
+            }
+          }
+        }
+        form {
+          width: 100%;
+          display: flex;
+          flex-direction: column;
+          gap: ${pxToRem(20)};
+
+          button {
+            height: ${pxToRem(56)};
+            background-color: ${darkBlue};
+            font-size: ${pxToRem(18)};
+            font-weight: 500;
+
+            &:hover {
+              background-color: ${darkBlue};
+            }
+          }
+        }
+      }
+    }
+  }
+  .w-50 {
+    width: 50%;
+  }
+  .w-100 {
+    width: 100%;
+  }
+  .row {
+    flex-direction: row;
+  }
+  .column {
+    flex-direction: column;
   }
 `;
