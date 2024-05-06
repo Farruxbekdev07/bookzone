@@ -41,6 +41,7 @@ export const UserInfoStyles = styled.div`
           .user-avatar {
             width: ${pxToRem(200)};
             height: ${pxToRem(200)};
+            font-size: ${pxToRem(96)};
           }
 
           .star {

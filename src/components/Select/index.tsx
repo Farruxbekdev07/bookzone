@@ -12,16 +12,15 @@ type Props = {
   control: Control<FieldValues, any>;
   defaultValue?: string;
   errors: FieldErrors<FieldValues>;
+  roles: Array<FieldValues>;
+  name: string;
+  label?: string;
 };
-const roles = [
-  { role: "author", value: "Author" },
-  { role: "reader", value: "Reader" },
-];
 
-function RoleSelect({ control, errors, defaultValue }: Props) {
+function RoleSelect({ control, errors, defaultValue, roles, name, label }: Props) {
   return (
     <Controller
-      name="role"
+      name={name}
       rules={{ required: true }}
       control={control}
       render={({ field }) => (
@@ -30,15 +29,15 @@ function RoleSelect({ control, errors, defaultValue }: Props) {
             className={errors[field.name] && "Mui-error"}
             id="demo-simple-select-helper-label"
           >
-            Role
+            {label}
           </InputLabel>
           <Select
             labelId="demo-simple-select-helper-label"
             {...field}
             defaultValue={defaultValue || ""}
-            displayEmpty
+            // displayEmpty
             id="demo-simple-select-helper"
-            label={"Role"}
+            label={label}
             error={!!errors[field.name]}
           >
             {roles?.map(({ role, value }, i) => (
@@ -49,7 +48,7 @@ function RoleSelect({ control, errors, defaultValue }: Props) {
           </Select>
           {errors[field.name] && (
             <FormHelperText className="Mui-error">
-              Please select role!
+              Please select {label}!
             </FormHelperText>
           )}
         </FormControl>

@@ -182,6 +182,9 @@ export const CreateBookStyle = styled.div`
           color: ${black};
           font-weight: 900;
         }
+        .file {
+          display: none;
+        }
       }
     }
     .create-button {

@@ -12,15 +12,16 @@ import { IAuthorData } from "../../../interfaces";
 import { pxToRem } from "../../../utils";
 import { useNavigate } from "react-router-dom";
 import paths from "../../../constants/paths";
-import { Book1 } from "../../../assets";
+import { DefaultAuthorImage } from "../../../assets";
 
 const { AUTHOR__DETAILS } = paths;
 
 function CustomAuthorCard({ data }: { data: IAuthorData }) {
-  const { audioBooks, books, dateOfBirth, fullName, image, dateOfDied } = data;
+  const { firstName, lastName, date_of_birth, date_of_death, image } = data;
   const { yellow } = colors;
   const navigate = useNavigate();
-
+  const birthYear = new Date(date_of_birth).getFullYear();
+  const deathYear = new Date(date_of_death).getFullYear();
   const handleClick = () => {
     navigate(AUTHOR__DETAILS);
   };
@@ -40,8 +41,10 @@ function CustomAuthorCard({ data }: { data: IAuthorData }) {
       <CardActionArea>
         <CardMedia
           component="img"
-          image={image || Book1}
-          alt={fullName || "book"}
+          image={image || DefaultAuthorImage}
+          alt={firstName || "book"}
+          height={"285rem"}
+          sx={image ? { objectPosition: "center" } : { objectPosition: "top" }}
         />
         <CardContent sx={{ padding: pxToRem(20) }}>
           <Typography
@@ -53,14 +56,23 @@ function CustomAuthorCard({ data }: { data: IAuthorData }) {
               textAlign: "center",
             }}
           >
-            {fullName}
+            {firstName} {lastName}
           </Typography>
-          <Typography
-            variant="h4"
-            sx={{ fontSize: pxToRem(16), color: "gray", textAlign: "center" }}
-          >
-            {dateOfBirth} - {dateOfDied}
-          </Typography>
+          {date_of_death ? (
+            <Typography
+              variant="h4"
+              sx={{ fontSize: pxToRem(16), color: "gray", textAlign: "center" }}
+            >
+              {birthYear} - {deathYear}
+            </Typography>
+          ) : (
+            <Typography
+              variant="h4"
+              sx={{ fontSize: pxToRem(16), color: "gray", textAlign: "center" }}
+            >
+              {birthYear} - yilda tug'ilgan
+            </Typography>
+          )}
           <Box
             sx={{
               display: "flex",
@@ -72,13 +84,13 @@ function CustomAuthorCard({ data }: { data: IAuthorData }) {
               variant="body1"
               sx={{ fontSize: pxToRem(18), color: "white" }}
             >
-              {books}
+              {/* {books} */}0
             </Typography>
             <Typography
               variant="body1"
               sx={{ fontSize: pxToRem(18), color: "white" }}
             >
-              {audioBooks}
+              {/* {audioBooks} */}0
             </Typography>
           </Box>
         </CardContent>

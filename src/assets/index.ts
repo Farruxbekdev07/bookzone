@@ -20,6 +20,8 @@ import Phone from "../assets/images/phone.png";
 import QuoteImg from "../assets/images/quote.png";
 import Camera from "../assets/images/camera.png";
 import CreateBookImage from "../assets/images/create-book.png";
+import DefaultBookImage from "../assets/images/default-book.jpg";
+import DefaultAuthorImage from "../assets/images/author-default.png";
 
 export {
   BookLogo,
@@ -44,4 +46,6 @@ export {
   QuoteImg,
   Camera,
   CreateBookImage,
+  DefaultBookImage,
+  DefaultAuthorImage,
 };

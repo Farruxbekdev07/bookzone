@@ -42,20 +42,19 @@ export interface IBookData {
 }
 export interface IAuthorData {
   image?: File | string | any;
-  fullName?: string;
-  dateOfBirth?: number | string | any;
-  dateOfDied?: number | string | any;
-  books?: number;
-  audioBooks?: number;
+  firstName?: string;
+  lastName?: string;
+  date_of_birth?: number | string | any;
+  date_of_death?: number | string | any;
 }
 export interface IUserData {
   image?: File | string | any;
   firstName: string;
   lastName?: string;
-  dateOfBirth?: number | string | any;
+  date_of_birth?: number | string | any;
   phone: number | string;
   password: number | string;
   email: string;
-  address?: string;
+  address: string;
   lang?: string;
 }

@@ -11,16 +11,36 @@ import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import { pxToRem } from "../../../../utils";
-import { UserAvatarImage } from "../../../../assets";
 import { AccountMenuComponent } from "../style";
 import { useNavigate } from "react-router-dom";
 import paths from "../../../../constants/paths";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { api } from "../../../../utils/api";
+import { useQuery } from "@tanstack/react-query";
+import ResponsiveDialog from "../../../Dialog";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
+  const [openDialog, setOpenDialog] = React.useState(false);
+  const token = useSelector((state: any) => state.auth.token);
   const { PROFILE, SETTINGS, REGISTER } = paths;
+  const { baseUrl, usersApi } = api;
+  const apiUrl = baseUrl + usersApi;
+  const open = Boolean(anchorEl);
   const navigate = useNavigate();
+
+  const getUsers = async () => {
+    const response = await axios.get(apiUrl, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response?.data;
+  };
+
+  const { data } = useQuery({ queryKey: ["users"], queryFn: () => getUsers() });
+  const { user } = data || {};
+  const { firstName, image } = user || {};
+  const name = firstName?.slice(0, 1);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -34,6 +54,10 @@ export default function AccountMenu() {
     navigate(path);
   };
 
+  const handleClickOpen = () => {
+    setOpenDialog(true);
+  };
+
   return (
     <AccountMenuComponent>
       <Box className="tooltip">
@@ -45,8 +69,8 @@ export default function AccountMenu() {
             aria-haspopup="true"
             aria-expanded={open ? "true" : undefined}
           >
-            <Avatar className="avatar" src={UserAvatarImage || ""}>
-              {UserAvatarImage ? "" : "M"}
+            <Avatar className="avatar" src={image || ""}>
+              {image ? "" : name}
             </Avatar>
           </IconButton>
         </Tooltip>
@@ -89,8 +113,8 @@ export default function AccountMenu() {
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
         <MenuItem onClick={() => handleNavigate(PROFILE)}>
-          <Avatar className="avatar" src={UserAvatarImage || ""}>
-            {UserAvatarImage ? "" : "M"}
+          <Avatar className="avatar" src={image || ""}>
+            {image ? "" : name}
           </Avatar>{" "}
           Profile
         </MenuItem>
@@ -107,13 +131,14 @@ export default function AccountMenu() {
           </ListItemIcon>
           Settings
         </MenuItem>
-        <MenuItem onClick={handleClose}>
+        <MenuItem onClick={handleClickOpen}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>
           Logout
         </MenuItem>
       </Menu>
+      <ResponsiveDialog open={openDialog} setOpen={setOpenDialog} />
     </AccountMenuComponent>
   );
 }
