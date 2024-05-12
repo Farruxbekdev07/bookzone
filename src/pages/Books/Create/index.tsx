@@ -12,10 +12,28 @@ import { CreateBookImage } from "../../../assets";
 import { pxToRem } from "../../../utils";
 import paths from "../../../constants/paths";
 import { Controller, FieldValues, useForm } from "react-hook-form";
+import { useMutation } from "@tanstack/react-query";
+import { IBookData } from "../../../interfaces";
+import { api } from "../../../utils/api";
+import axios from "axios";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import RoleSelect from "../../../components/Select";
+
+const roles = [
+  { role: "classic", value: "Classic" },
+  { role: "biography", value: "Biography" },
+  { role: "science", value: "Science" },
+];
 
 function CreateBook() {
   const matches = useMediaQuery(`(min-width: ${pxToRem(956)})`);
-  const { REGISTER } = paths;
+  const token = useSelector((state: any) => state.auth.token);
+  const { BOOKS } = paths;
+  const { baseUrl, booksApi } = api;
+  const apiUrl = baseUrl + booksApi;
+  const navigate = useNavigate();
 
   const {
     handleSubmit,
@@ -23,23 +41,55 @@ function CreateBook() {
     formState: { errors },
   } = useForm();
 
-  const handleFinish = async (data: FieldValues) => {
-    console.log(data);
+  const { mutate } = useMutation({
+    mutationFn: (bookData: IBookData) =>
+      axios.post(apiUrl, bookData, {
+        headers: { Authorization: `Bearer ${token}` },
+      }),
+    onSuccess: (data) => {
+      console.log(data?.data);
+      toast.success("Book created successfully");
+      navigate(BOOKS);
+    },
+    onError: (err) => {
+      toast.error(err?.message);
+      console.log(token);
+    },
+  });
+
+  const handleFinish = async (bookData: FieldValues | any) => {
+    mutate(bookData);
   };
 
   return (
     <CreateBookStyle>
-      <Box className={matches ? "create-book-container" : "create-book-container column"}>
-        <Box className={matches ? "create-book-image w-50" : "create-book-image w-100"}>
+      <Box
+        className={
+          matches ? "create-book-container" : "create-book-container column"
+        }
+      >
+        <Box
+          className={
+            matches ? "create-book-image w-50" : "create-book-image w-100"
+          }
+        >
           <Box className="image-container">
             <img src={CreateBookImage} alt="create book" />
             <Typography className="image-name">Ulug'bek xazinasi</Typography>
-            <Button variant="contained" fullWidth className="create-button">
+            <Button
+              variant="contained"
+              fullWidth
+              className="create-button"
+              onClick={() => {}}
+            >
               Upload cover
             </Button>
+            <input type="file" className="file" />
           </Box>
         </Box>
-        <Box className={matches ? "form-container w-50" : "form-container w-100"}>
+        <Box
+          className={matches ? "form-container w-50" : "form-container w-100"}
+        >
           <form onSubmit={handleSubmit(handleFinish)}>
             <Typography className="form-title">Add book</Typography>
             <Controller
@@ -64,9 +114,9 @@ function CreateBook() {
               }}
             />
             <Controller
-              name="Pages"
+              name="pages"
               rules={{
-                required: true,
+                required: false,
               }}
               control={control}
               render={({ field }) => {
@@ -85,9 +135,9 @@ function CreateBook() {
               }}
             />
             <Controller
-              name="Year"
+              name="year"
               rules={{
-                required: true,
+                required: false,
               }}
               control={control}
               render={({ field }) => {
@@ -106,9 +156,9 @@ function CreateBook() {
               }}
             />
             <Controller
-              name="Price"
+              name="price"
               rules={{
-                required: true,
+                required: false,
               }}
               control={control}
               render={({ field }) => {
@@ -127,9 +177,9 @@ function CreateBook() {
               }}
             />
             <Controller
-              name="Country"
+              name="country"
               rules={{
-                required: true,
+                required: false,
               }}
               control={control}
               render={({ field }) => {
@@ -148,30 +198,32 @@ function CreateBook() {
               }}
             />
             <Controller
-              name="Author"
+              name="rate"
               rules={{
-                required: true,
+                required: false,
               }}
               control={control}
               render={({ field }) => {
                 return (
                   <FormControl fullWidth>
                     <TextField
-                      label={"Author"}
+                      label={"Rate"}
                       {...field}
+                      type="number"
                       error={!!errors[field.name]}
                       helperText={
-                        !!errors[field.name] && "Please enter book author!"
+                        !!errors[field.name] && "Please enter book rate!"
                       }
                     />
                   </FormControl>
                 );
               }}
             />
+            <RoleSelect control={control} errors={errors} roles={roles} name="category" label="Category" />
             <Controller
-              name="Description"
+              name="description"
               rules={{
-                required: true,
+                required: false,
               }}
               control={control}
               render={({ field }) => {

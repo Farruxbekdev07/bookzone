@@ -9,30 +9,9 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import UserHeader from "../components/Header";
-import paths from "../../../constants/paths";
 import { pxToRem } from "../../../utils";
 import { FieldValues, useForm } from "react-hook-form";
 import { AccountStyles } from "../Profile/style";
-
-const { PROFILE, SECURITY, SETTINGS } = paths;
-
-const data = [
-  {
-    value: "My Account",
-    index: 1,
-    path: PROFILE,
-  },
-  {
-    value: "Security",
-    index: 2,
-    path: SECURITY,
-  },
-  {
-    value: "Settings",
-    index: 3,
-    path: SETTINGS,
-  },
-];
 
 const currencies = [
   {
@@ -62,7 +41,7 @@ function Settings() {
 
   return (
     <AccountStyles>
-      <UserHeader data={data} />
+      <UserHeader />
       <Box
         className={matches ? "account-container" : "account-container column"}
       >

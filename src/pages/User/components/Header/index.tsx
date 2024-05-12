@@ -3,8 +3,29 @@ import { List, ListItem, Typography } from "@mui/material";
 import { UserHeaderStyles } from "../../style";
 import { useLocation, useNavigate } from "react-router-dom";
 import { INavBarData } from "../../../../interfaces";
+import paths from "../../../../constants/paths";
 
-function UserHeader({ data }: { data: Array<INavBarData> }) {
+const { PROFILE, SECURITY, SETTINGS } = paths;
+
+const data: INavBarData[] = [
+  {
+    value: "My Account",
+    index: 1,
+    path: PROFILE,
+  },
+  {
+    value: "Security",
+    index: 2,
+    path: SECURITY,
+  },
+  {
+    value: "Settings",
+    index: 3,
+    path: SETTINGS,
+  },
+];
+
+function UserHeader() {
   const navigate = useNavigate();
   const { pathname } = useLocation();
 
@@ -26,7 +47,9 @@ function UserHeader({ data }: { data: Array<INavBarData> }) {
               }
               onClick={() => handleNavigate(path)}
             >
-              <Typography className="list-item-number active-item">{index}</Typography>
+              <Typography className="list-item-number active-item">
+                {index}
+              </Typography>
               {value}
             </ListItem>
           );

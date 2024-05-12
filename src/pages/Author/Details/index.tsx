@@ -1,18 +1,132 @@
-import React from "react";
+/* eslint-disable array-callback-return */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
 import { StyledComponent } from "../../Styles/style";
 import { Box, Typography } from "@mui/material";
-import { AuthorDetail } from "../../../assets";
+import { AuthorDetail, DefaultAuthorImage } from "../../../assets";
 import HorizontalRuleIcon from "@mui/icons-material/HorizontalRule";
 import CustomBookCard from "../../../components/Cards/Books";
-import { readBooks } from "../../../constants/data";
-import { IBookData } from "../../../interfaces";
+import { IAuthorData, IBookData } from "../../../interfaces";
 import BookmarkIcon from "@mui/icons-material/Bookmark";
 import DetailsTitle from "../../components/details-title";
 import { DetailCardWrapper } from "../../Books/style";
 import { DetailPageStyle } from "../style";
 import Header from "../../../components/Header";
+import { api } from "../../../utils/api";
+import { useSelector } from "react-redux";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+interface IMonthsData {
+  key: number;
+  month: string;
+}
+
+const monthData: IMonthsData[] = [
+  {
+    key: 0,
+    month: "Yanvar",
+  },
+  {
+    key: 1,
+    month: "Fevral",
+  },
+  {
+    key: 2,
+    month: "Mart",
+  },
+  {
+    key: 3,
+    month: "Aprel",
+  },
+  {
+    key: 4,
+    month: "May",
+  },
+  {
+    key: 5,
+    month: "Iyun",
+  },
+  {
+    key: 6,
+    month: "Iyul",
+  },
+  {
+    key: 7,
+    month: "Avgust",
+  },
+  {
+    key: 8,
+    month: "Sentyabr",
+  },
+  {
+    key: 9,
+    month: "Oktyabr",
+  },
+  {
+    key: 10,
+    month: "Noyabr",
+  },
+  {
+    key: 11,
+    month: "Dekabr",
+  },
+];
 
 function AuthorDetails() {
+  const authorId = useSelector((state: any) => state.book?.authorId?.authorId);
+  const [authorData, setAuthorData] = useState({});
+  const { baseUrl, authorsApi, booksApi } = api;
+  const authorsApiUrl = baseUrl + authorsApi;
+  const booksApiUrl = baseUrl + booksApi;
+  const token = useSelector((state: any) => state.auth.token);
+
+  const getAuthors = async () => {
+    const response = await axios.get(authorsApiUrl);
+    return response?.data;
+  };
+
+  const { data: getBookData } = useQuery({
+    queryKey: ["books"],
+    queryFn: () => getBooks(),
+  });
+
+  const { data: getAuthorData } = useQuery({
+    queryKey: ["authors__detail"],
+    queryFn: () => getAuthors(),
+  });
+
+  const getBooks = async () => {
+    const response = await axios.get(booksApiUrl, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response?.data;
+  };
+
+  useEffect(() => {
+    // refetch();
+    console.log(getAuthorData?.payload);
+    getAuthorData?.payload?.filter((author: IAuthorData) => {
+      if (author?._id === authorId) {
+        console.log(author);
+        setAuthorData(author);
+      }
+    });
+  }, []);
+
+  const { firstName, lastName, date_of_death, date_of_birth }: any =
+    authorData || {};
+
+  const birthMonth = new Date(date_of_birth).getMonth();
+  const monthFilter = monthData?.filter(
+    (item: IMonthsData) => item.key === birthMonth
+  )[0];
+  const { month } = monthFilter || {};
+  const birthDay = new Date(date_of_birth).getDay();
+  const birthYear = new Date(date_of_birth).getFullYear();
+  const deathDay = new Date(date_of_death).getDay();
+  const deathYear = new Date(date_of_death).getFullYear();
+
   return (
     <>
       <Header />
@@ -23,8 +137,8 @@ function AuthorDetails() {
               <Box>
                 <img
                   className="detail-image"
-                  src={AuthorDetail}
-                  alt="O'tkir Hoshimov"
+                  src={DefaultAuthorImage}
+                  alt={firstName}
                 />
                 <Box className="date-of-living-container">
                   <Box className="date-of-living">
@@ -33,7 +147,7 @@ function AuthorDetails() {
                         Tavallud Sanasi
                       </Typography>
                       <Typography className="text text-39 text-yellow">
-                        5-AVG 1941
+                        {birthDay}-{month} {birthYear}
                       </Typography>
                       <Typography className="text text-12 text-white">
                         Toshkent, Uzbekistan
@@ -47,7 +161,7 @@ function AuthorDetails() {
                         Tavallud Sanasi
                       </Typography>
                       <Typography className="text text-39 text-yellow">
-                        24-MAY 2013
+                        {deathDay}-{month} {deathYear}
                       </Typography>
                       <Typography className="text text-12 text-white">
                         Toshkent, Uzbekistan
@@ -58,7 +172,7 @@ function AuthorDetails() {
               </Box>
               <Box className="about-this-life">
                 <Box>
-                  <DetailsTitle title="O'tkir Hoshimov" />
+                  <DetailsTitle title={firstName + " " + lastName} />
                   <Typography className="description">
                     O'tkir Hoshimov 1941 yil Toshkent viloyatining Zangiota
                     (hozirgi Chilonzor) tumanidagi Do'mbiravot mavzeida
@@ -105,7 +219,7 @@ function AuthorDetails() {
                 </Box>
                 <Box>
                   <DetailCardWrapper>
-                    {readBooks?.map((item: IBookData) => {
+                    {getBookData?.payload?.docs?.map((item: IBookData) => {
                       return <CustomBookCard data={item} />;
                     })}
                   </DetailCardWrapper>

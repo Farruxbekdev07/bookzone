@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable array-callback-return */
+import React, { useEffect, useState } from "react";
 import Container from "../../../components/Container";
 import { StyledComponent } from "../../Styles/style";
 import {
-  BookDetail,
   BookIcon,
+  DefaultBookImage,
   Headphone,
   Phone,
   QuoteImg,
@@ -19,9 +21,12 @@ import CustomTabPanel from "../../../components/Tabs";
 import { BookDetailStyle, DetailCardWrapper, Flex, QuoteCard } from "../style";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import ShareIcon from "@mui/icons-material/Share";
-import { readBooks } from "../../../constants/data";
 import CustomBookCard from "../../../components/Cards/Books";
 import Header from "../../../components/Header";
+import { useSelector } from "react-redux";
+import { api } from "../../../utils/api";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 const iqtibos = [
   {
@@ -34,7 +39,7 @@ const iqtibos = [
   },
 ];
 
-export const bookDetailsTabData: ITabsData[] = [
+const bookDetailsTabData: ITabsData[] = [
   {
     index: 0,
     label: "Muallif haqida",
@@ -53,7 +58,49 @@ export const bookDetailsTabData: ITabsData[] = [
 ];
 
 function BookDetails() {
+  const bookId = useSelector((state: any) => state.book?.bookId?.bookId);
+  const token = useSelector((state: any) => state.auth.token);
   const [value, setValue] = useState(0);
+  const [bookData, setBookData] = useState({});
+  const { baseUrl, booksApi } = api;
+  const apiUrl = baseUrl + booksApi;
+
+  const getBooks = async () => {
+    const response = await axios.get(apiUrl, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response?.data;
+  };
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["book__detail"],
+    queryFn: () => getBooks(),
+  });
+  const getBookData = data?.payload?.docs;
+
+  useEffect(() => {
+    getBookData?.filter((book: IBookData) => {
+      if (book?._id === bookId) {
+        console.log(book);
+        setBookData(book);
+      }
+    });
+  }, []);
+
+  const {
+    title,
+    image,
+    author,
+    category,
+    description,
+    pages,
+    price,
+    rate,
+    year,
+  }: any = bookData || {};
+  const bookYear = new Date(year).getFullYear();
+  const { firstName, lastName } = author || {};
+  console.log(getBookData);
 
   return (
     <>
@@ -63,27 +110,27 @@ function BookDetails() {
           <BookDetailStyle>
             <Box className="book-info-container">
               <Box className="book-image">
-                <img src={BookDetail} alt="Qo'rqma" />
+                <img src={image || DefaultBookImage} alt={firstName} />
               </Box>
               <Box className="book-info">
-                <DetailsTitle title="QO'RQMA" />
+                <DetailsTitle title={title} />
                 <Typography className="book-info-name">
-                  Javlon Jovliyev
+                  {firstName} {lastName}
                   <Typography>|</Typography>
                   <Typography className="book-info-rate">
                     <StarIcon sx={{ color: "white" }} />
-                    4.1
+                    {rate}
                   </Typography>
                 </Typography>
                 <Box className="about-book-container">
                   <Typography className="page-size">
-                    Sahifalar Soni: <Typography>376</Typography>
+                    Sahifalar Soni: <Typography>{pages}</Typography>
                   </Typography>
                   <Typography className="page-size">
-                    Chop etilgan: <Typography>2021</Typography>
+                    Chop etilgan: <Typography>{bookYear}</Typography>
                   </Typography>
                   <Typography className="page-size">
-                    Janri: <Typography>Tarixiy</Typography>
+                    Janri: <Typography>{category}</Typography>
                   </Typography>
                   <Typography className="page-size">
                     Nashriyot: <Typography>Nihol nashr</Typography>
@@ -95,23 +142,7 @@ function BookDetails() {
                   <Box className="line"></Box>
                 </Box>
                 <Box width={"100%"}>
-                  <Typography className="description">
-                    Роман ўтган асрнинг йигирманчи йилларида Германияда таҳсил
-                    олган ва собиқ Совет Иттифоқи томонидан шафқатсизларча қатл
-                    этилган миллат йигит-қизларининг хотирасига бағишланади.
-                  </Typography>
-                  <Typography className="description">
-                    Роман воқеаларини қисқача сўзлар билан ифода этиб бўлмайди.
-                    Барчаси шу қадар тиғизки, шошириб қўяди. Мажоз, образ,
-                    ифода, ўт, ҳеч кимникига ўхшамаган лиризмни ҳис қиласиз.
-                    Миллият, соф муҳаббат, кўринмас ва ошкор фожиалар, тарих,
-                    бугун ва эртанинг бир-бирига кавшарланган ҳалқаси, ростлик
-                    даъвосидаги ёлғонлар, руҳ ва қондаги парадокслар сизни ўтмиш
-                    ва келажак куйига асир қилади, ўйлатади, йиғлатади ва
-                    аччиқ-аччиқ кулдиради. Ўтган аср бошида Германияда ўқиган
-                    талабалар, улар маслаги ва фожиали қисмати бугунги ёшлар
-                    мақсади билан бир тарозига тортилади.
-                  </Typography>
+                  <Typography className="description">{description}</Typography>
                 </Box>
                 <Typography className="format">Mavjud formatlar</Typography>
                 <Box className="shelf-container">
@@ -121,7 +152,7 @@ function BookDetails() {
                       <Typography className="line-height">
                         Qog'oz kitob
                       </Typography>
-                      <Typography>27 000 so'm</Typography>
+                      <Typography>{price} so'm</Typography>
                     </Box>
                     <Box className="shelf-book">
                       <img src={Headphone} alt="headphone" />
@@ -150,7 +181,6 @@ function BookDetails() {
             <Box>
               {bookDetailsTabData?.map((book: ITabsData) => {
                 const { index, data } = book;
-
                 return (
                   <CustomTabPanel value={value} index={index | 0}>
                     <Box
@@ -159,8 +189,6 @@ function BookDetails() {
                     >
                       {data?.map((item: any) => {
                         const { content } = item;
-                        console.log(item, "data////////////////////////////");
-
                         return (
                           <QuoteCard>
                             <img src={QuoteImg} alt="quote" />
@@ -191,7 +219,7 @@ function BookDetails() {
             </Box>
             <Box>
               <DetailCardWrapper>
-                {readBooks?.map((item: IBookData) => {
+                {getBookData?.map((item: IBookData) => {
                   return <CustomBookCard data={item} />;
                 })}
               </DetailCardWrapper>

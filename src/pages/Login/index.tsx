@@ -8,15 +8,32 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import { useForm, Controller, FieldValues } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import paths from "../../constants/paths";
 import { pxToRem } from "../../utils";
 import { RegisterComponent } from "../Styles/style";
 import { SignInImage } from "../../assets";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { IUserData } from "../../interfaces";
+import { api } from "../../utils/api";
+import { useDispatch } from "react-redux";
+import { login, setDate } from "../../store/slices/AuthSlice";
+import { toast } from "react-toastify";
 
 function SignIn() {
+  const { baseUrl, loginApi } = api;
   const matches = useMediaQuery(`(min-width: ${pxToRem(1000)})`);
+  const { USER } = paths;
   const { REGISTER } = paths;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const apiUrl = baseUrl + loginApi;
+
+  const handleLogin = async (user: IUserData) => {
+    const response = await axios.post(apiUrl, user);
+    return response?.data;
+  };
 
   const {
     handleSubmit,
@@ -24,8 +41,30 @@ function SignIn() {
     formState: { errors },
   } = useForm();
 
-  const handleFinish = async (data: FieldValues) => {
-    console.log(data);
+  const { mutate, data } = useMutation({
+    mutationFn: (user: IUserData) => handleLogin(user),
+    onError: (err: any) => {
+      console.log(data);
+      console.log(err?.response);
+      toast.error(err?.response?.data?.msg);
+    },
+    onSuccess: (data) => {
+      const currentTime: any = new Date();
+      currentTime.setDate(currentTime.getDate());
+      currentTime.setHours(currentTime.getHours() + 12);
+      currentTime.setMinutes(currentTime.getMinutes());
+      currentTime.setMilliseconds(currentTime.getMilliseconds());
+      dispatch(setDate(currentTime));
+      dispatch(login(data));
+      toast.success("Successfully completed");
+      navigate(USER);
+      console.log(data);
+      console.log("Expire Date: ", new Date(currentTime));
+    },
+  });
+
+  const handleFinish = async (userData: FieldValues | any) => {
+    mutate(userData);
   };
 
   return (
@@ -91,6 +130,7 @@ function SignIn() {
                     <FormControl fullWidth>
                       <TextField
                         label={"Password"}
+                        type="password"
                         {...field}
                         error={!!errors[field.name]}
                         helperText={

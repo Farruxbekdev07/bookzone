@@ -1,4 +1,5 @@
-import React from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from "react";
 import {
   Box,
   Button,
@@ -8,33 +9,35 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import UserHeader from "../components/Header";
-import paths from "../../../constants/paths";
 import { AccountStyles } from "../Profile/style";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { pxToRem } from "../../../utils";
-
-const { PROFILE, SECURITY, SETTINGS } = paths;
-
-const data = [
-  {
-    value: "My Account",
-    index: 1,
-    path: PROFILE,
-  },
-  {
-    value: "Security",
-    index: 2,
-    path: SECURITY,
-  },
-  {
-    value: "Settings",
-    index: 3,
-    path: SETTINGS,
-  },
-];
+import { useSelector } from "react-redux";
+import { api } from "../../../utils/api";
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
 
 function Security() {
   const matches = useMediaQuery(`(min-width: ${pxToRem(864)})`);
+  const token = useSelector((state: any) => state.auth.token);
+  const { baseUrl, usersApi } = api;
+  const apiUrl = baseUrl + usersApi;
+  const getUsers = async () => {
+    const response = await axios.get(apiUrl, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response?.data;
+  };
+  const { data, refetch } = useQuery({
+    queryKey: ["users"],
+    queryFn: () => getUsers(),
+  });
+  const { user } = data || {};
+  const { email } = user || {};
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const {
     handleSubmit,
@@ -48,7 +51,7 @@ function Security() {
 
   return (
     <AccountStyles>
-      <UserHeader data={data} />
+      <UserHeader />
       <Box
         className={matches ? "account-container" : "account-container column"}
       >
@@ -64,7 +67,7 @@ function Security() {
                 required: true,
               }}
               control={control}
-              defaultValue="john.wick@gmail.com"
+              defaultValue={email || ""}
               render={({ field }) => {
                 return (
                   <FormControl fullWidth>
@@ -91,7 +94,6 @@ function Security() {
                 required: true,
               }}
               control={control}
-              defaultValue="********"
               render={({ field }) => {
                 return (
                   <FormControl fullWidth>
@@ -119,7 +121,6 @@ function Security() {
                 required: true,
               }}
               control={control}
-              defaultValue="********"
               render={({ field }) => {
                 return (
                   <FormControl fullWidth>
@@ -147,7 +148,6 @@ function Security() {
                 required: true,
               }}
               control={control}
-              defaultValue="********"
               render={({ field }) => {
                 return (
                   <FormControl fullWidth>

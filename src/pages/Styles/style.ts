@@ -152,6 +152,22 @@ export const StyledComponent = styled.div`
     line-height: ${pxToRem(24)};
     padding: ${pxToRem(15)} ${pxToRem(0)};
   }
+  .grid {
+    display: grid;
+    gap: ${pxToRem(10)};
+  }
+  .justify-center {
+    justify-content: center;
+  }
+  .gap-10 {
+    gap: ${pxToRem(10)};
+  }
+  .no-data {
+    display: grid;
+    justify-content: center;
+    align-items: center;
+    height: 25vh;
+  }
 `;
 
 export const RegisterComponent = styled.div`

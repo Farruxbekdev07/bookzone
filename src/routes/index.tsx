@@ -3,8 +3,8 @@ import lazyWithPreload from "react-lazy-with-preload";
 import paths from "../constants/paths";
 import { IRoute } from "../interfaces";
 
-const SignIn = lazyWithPreload(() => import("../pages/Signin"));
-const SignUp = lazyWithPreload(() => import("../pages/Signup"));
+const SignIn = lazyWithPreload(() => import("../pages/Login"));
+const SignUp = lazyWithPreload(() => import("../pages/Register"));
 const Author = lazyWithPreload(() => import("../pages/Author/index"));
 const AuthorCreate = lazyWithPreload(
   () => import("../pages/Author/Create/index")
@@ -42,7 +42,25 @@ const {
 SignIn.preload();
 SignUp.preload();
 
-export const routes: IRoute[] = [
+export const privateRoutes: IRoute[] = [
+  {
+    path: "/",
+    key: "signin",
+    component: <SignIn />,
+  },
+  {
+    path: LOG_IN,
+    key: "signin",
+    component: <SignIn />,
+  },
+  {
+    path: REGISTER,
+    key: "signup",
+    component: <SignUp />,
+  },
+];
+
+export const publicRoutes: IRoute[] = [
   {
     path: LOG_IN,
     key: "signin",

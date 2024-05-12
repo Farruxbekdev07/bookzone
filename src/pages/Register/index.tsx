@@ -3,55 +3,63 @@ import {
   Box,
   Button,
   FormControl,
-  MenuItem,
   TextField,
   Typography,
   useMediaQuery,
 } from "@mui/material";
 import { useForm, Controller, FieldValues } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import paths from "../../constants/paths";
 import { pxToRem } from "../../utils";
 import { RegisterComponent } from "../Styles/style";
 import { SignUpImage } from "../../assets";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "../../utils/api";
-import { postData } from "../../utils/post";
 import RoleSelect from "../../components/Select";
+import { IUserData } from "../../interfaces";
+import axios from "axios";
+import { useDispatch } from "react-redux";
+import { login } from "../../store/slices/AuthSlice";
+import { toast } from "react-toastify";
 const { baseUrl, registerApi } = api;
 
+const roles = [
+  { role: "author", value: "Author" },
+  { role: "reader", value: "Reader" },
+];
+
 function SignUp() {
+  const matches = useMediaQuery(`(min-width: ${pxToRem(956)})`);
+  const { LOG_IN, USER } = paths;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const apiUrl = baseUrl + registerApi;
 
-  const user = {
-    firstName: "Sanjar",
-    lastName: "Abduraimov",
-    phone: +998990134034,
-    email: "sanjarbekweb@gmail.com",
-    password: "43678yrwiuehruweytr8y348",
-    role: "reader | author",
-    address: "HelloCity",
-    image: "ID",
-    lang: "uz",
+  const handleRegister = async (user: IUserData) => {
+    const response = await axios.post(apiUrl, user);
+    return response.data;
   };
-
-  const { data, error, isSuccess } = useMutation({
-    mutationKey: ["register"],
-    mutationFn: () => postData(apiUrl, user),
-  });
-
-  const matches = useMediaQuery(`(min-width: ${pxToRem(956)})`);
-  const { LOG_IN } = paths;
 
   const {
     handleSubmit,
     control,
-    register,
     formState: { errors },
   } = useForm();
 
-  const handleFinish = async (data: FieldValues) => {
-    console.log(data);
+  const { mutate } = useMutation({
+    mutationFn: (user: IUserData) => handleRegister(user),
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.msg);
+    },
+    onSuccess: (data) => {
+      dispatch(login(data));
+      navigate(USER);
+      toast.success("Successfully completed");
+    },
+  });
+
+  const onSubmit = (userData: FieldValues | any) => {
+    mutate(userData);
   };
 
   return (
@@ -84,7 +92,7 @@ function SignUp() {
                 Already have an account? <Link to={LOG_IN}>Log In</Link>
               </Typography>
             </Box>
-            <form onSubmit={handleSubmit(handleFinish)}>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <Controller
                 name="firstName"
                 rules={{
@@ -138,6 +146,7 @@ function SignUp() {
                   return (
                     <FormControl fullWidth>
                       <TextField
+                        type="tel"
                         label={"Phone"}
                         {...field}
                         error={!!errors[field.name]}
@@ -193,9 +202,32 @@ function SignUp() {
                 }}
               />
               <Controller
-                name="address"
+                name="date_of_birth"
                 rules={{
                   required: true,
+                }}
+                control={control}
+                render={({ field }) => {
+                  return (
+                    <FormControl fullWidth>
+                      <TextField
+                        type="date"
+                        // label={"Date of birth"}
+                        {...field}
+                        error={!!errors[field.name]}
+                        helperText={
+                          !!errors[field.name] &&
+                          "Please enter your date of birth!"
+                        }
+                      />
+                    </FormControl>
+                  );
+                }}
+              />
+              <Controller
+                name="address"
+                rules={{
+                  required: false,
                 }}
                 control={control}
                 render={({ field }) => {
@@ -216,7 +248,9 @@ function SignUp() {
               <RoleSelect
                 control={control}
                 errors={errors}
-                defaultValue="reader"
+                roles={roles}
+                name="role"
+                label="Role"
               />
               <Box>
                 <Button variant="contained" fullWidth type="submit">

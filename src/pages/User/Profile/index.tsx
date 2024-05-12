@@ -1,4 +1,5 @@
-import React from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from "react";
 import {
   Avatar,
   Box,
@@ -10,34 +11,36 @@ import {
   useMediaQuery,
 } from "@mui/material";
 import UserHeader from "../components/Header";
-import paths from "../../../constants/paths";
 import { AccountStyles } from "./style";
-import { Camera, UserAvatarImage } from "../../../assets";
+import { Camera, DefaultAuthorImage } from "../../../assets";
 import { Controller, FieldValues, useForm } from "react-hook-form";
 import { pxToRem } from "../../../utils";
-
-const { PROFILE, SECURITY, SETTINGS } = paths;
-
-const data = [
-  {
-    value: "My Account",
-    index: 1,
-    path: PROFILE,
-  },
-  {
-    value: "Security",
-    index: 2,
-    path: SECURITY,
-  },
-  {
-    value: "Settings",
-    index: 3,
-    path: SETTINGS,
-  },
-];
+import { useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../../../utils/api";
+import axios from "axios";
 
 function Profile() {
   const matches = useMediaQuery(`(min-width: ${pxToRem(864)})`);
+  const token = useSelector((state: any) => state.auth.token);
+  const { baseUrl, usersApi } = api;
+  const apiUrl = baseUrl + usersApi;
+  const getUsers = async () => {
+    const response = await axios.get(apiUrl, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    return response?.data;
+  };
+  const { data, refetch } = useQuery({
+    queryKey: ["users"],
+    queryFn: () => getUsers(),
+  });
+  const { user } = data || {};
+  const { firstName, lastName, image, phone, email } = user || {};
+
+  useEffect(() => {
+    refetch();
+  }, []);
 
   const {
     handleSubmit,
@@ -51,13 +54,13 @@ function Profile() {
 
   return (
     <AccountStyles>
-      <UserHeader data={data} />
+      <UserHeader />
       <Box
         className={matches ? "account-container" : "account-container column"}
       >
         <Box className="avatar-wrapper">
-          <Avatar className="avatar" src={UserAvatarImage || ""}>
-            {UserAvatarImage ? "" : "M"}
+          <Avatar className="avatar" src={image || DefaultAuthorImage}>
+            {DefaultAuthorImage ? "" : "M"}
           </Avatar>
           <IconButton size="large" className="camera">
             <img src={Camera} alt="camera" />
@@ -73,7 +76,7 @@ function Profile() {
                 required: true,
               }}
               control={control}
-              defaultValue="John"
+              defaultValue={firstName || ""}
               render={({ field }) => {
                 return (
                   <FormControl fullWidth>
@@ -99,7 +102,7 @@ function Profile() {
                 required: true,
               }}
               control={control}
-              defaultValue="Wick"
+              defaultValue={lastName || ""}
               render={({ field }) => {
                 return (
                   <FormControl fullWidth>
@@ -125,7 +128,7 @@ function Profile() {
                 required: true,
               }}
               control={control}
-              defaultValue="+998932228066"
+              defaultValue={phone || ""}
               render={({ field }) => {
                 return (
                   <FormControl fullWidth>
@@ -152,7 +155,7 @@ function Profile() {
                 required: true,
               }}
               control={control}
-              defaultValue="john.wick@gmail.com"
+              defaultValue={email || ""}
               render={({ field }) => {
                 return (
                   <FormControl fullWidth>
