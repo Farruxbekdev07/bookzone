@@ -22,6 +22,7 @@ import Camera from "../assets/images/camera.png";
 import CreateBookImage from "../assets/images/create-book.png";
 import DefaultBookImage from "../assets/images/default-book.jpg";
 import DefaultAuthorImage from "../assets/images/author-default.png";
+import NoDataImage from "../assets/images/no-data.png";
 
 export {
   BookLogo,
@@ -48,4 +49,5 @@ export {
   CreateBookImage,
   DefaultBookImage,
   DefaultAuthorImage,
+  NoDataImage,
 };

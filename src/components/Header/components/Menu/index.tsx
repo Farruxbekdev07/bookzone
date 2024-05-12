@@ -70,7 +70,7 @@ export default function AccountMenu() {
             aria-expanded={open ? "true" : undefined}
           >
             <Avatar className="avatar" src={image || ""}>
-              {image ? "" : name}
+              {image ? "" : name?.toUpperCase()}
             </Avatar>
           </IconButton>
         </Tooltip>
@@ -114,7 +114,7 @@ export default function AccountMenu() {
       >
         <MenuItem onClick={() => handleNavigate(PROFILE)}>
           <Avatar className="avatar" src={image || ""}>
-            {image ? "" : name}
+            {image ? "" : name?.toUpperCase()}
           </Avatar>{" "}
           Profile
         </MenuItem>

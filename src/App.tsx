@@ -16,18 +16,14 @@ function App() {
   const navigate = useNavigate();
   const { LOG_IN } = paths;
   const newDate = Date.now();
+  const expiry = new Date(expireDate).getTime();
 
   useEffect(() => {
-    if (expireDate <= newDate) {
+    if (expiry <= newDate) {
       dispatch(logout());
       navigate(LOG_IN);
     }
-  }, [expireDate]);
-
-  if (expireDate <= newDate) {
-    dispatch(logout());
-    navigate(LOG_IN);
-  }
+  }, []);
 
   if (token) {
     return (

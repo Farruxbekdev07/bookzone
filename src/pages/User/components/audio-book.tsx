@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import {
   Box,
@@ -13,10 +14,12 @@ import VolumeUpIcon from "@mui/icons-material/VolumeUp";
 import FastRewindIcon from "@mui/icons-material/FastRewind";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import FastForwardIcon from "@mui/icons-material/FastForward";
-import audioCard from "../../../assets/images/audio.png";
-import { IAudioBookCard } from "../../../interfaces";
-import { pxToRem } from "../../../utils";
-import { Book1 } from "../../../assets";
+import { IBookData } from "../../../interfaces";
+import { getDataWithToken, pxToRem } from "../../../utils";
+import { Book1, DefaultBookImage } from "../../../assets";
+import { useQuery } from "@tanstack/react-query";
+import { api } from "../../../utils/api";
+import { useSelector } from "react-redux";
 
 const CustomSliderStyles = {
   "& .MuiSlider-thumb": {
@@ -38,50 +41,34 @@ const CustomSliderStyles = {
   },
 };
 
-const AudioBookData = [
-  {
-    image: Book1,
-    name: "Dunyoning ishlari 5-track",
-    author: "O’tkir Hoshimov",
-    time: "02:22:18",
-    isActive: true,
-  },
-  {
-    image: Book1,
-    name: "Dunyoning ishlari 4-track",
-    author: "O’tkir Hoshimov",
-    time: "02:16:09",
-    isActive: false,
-  },
-  {
-    image: Book1,
-    name: "Dunyoning ishlari 3-track",
-    author: "O’tkir Hoshimov",
-    time: "02:09:05",
-    isActive: false,
-  },
-  {
-    image: Book1,
-    name: "Dunyoning ishlari 2-track",
-    author: "O’tkir Hoshimov",
-    time: "01:13:23",
-    isActive: false,
-  },
-];
-
 function AudioBook() {
+  const token = useSelector((state: any) => state.auth.token);
   const [value, setValue] = React.useState<number>(30);
+  const { baseUrl, booksApi } = api;
+  const apiUrl = baseUrl + booksApi;
 
   const handleChange = (event: Event, newValue: number | number[]) => {
     setValue(newValue as number);
   };
 
+  const {
+    data: getBookData,
+    refetch,
+    isLoading,
+    isSuccess,
+  } = useQuery({
+    queryKey: ["books"],
+    queryFn: () => getDataWithToken(apiUrl, token),
+  });
+
+  React.useEffect(() => {
+    refetch();
+  }, [isLoading, isSuccess]);
+
   return (
     <Box className="user-main-audio-books">
       <Box>
-        <Typography className="text text-yellow text-22">
-          Audio Kitob
-        </Typography>
+        <Typography className="text text-yellow text-22">Audio Book</Typography>
       </Box>
       <Box className="audio-books">
         <img src={Book1 || ""} alt="Book1" className="book" />
@@ -131,7 +118,7 @@ function AudioBook() {
         </Box>
       </Box>
       <Box className="audio-book-card-container">
-        {AudioBookData?.map((item: IAudioBookCard) => (
+        {getBookData?.payload?.docs?.map((item: IBookData) => (
           <AudioBookCard data={item} />
         ))}
       </Box>
@@ -139,25 +126,27 @@ function AudioBook() {
   );
 }
 
-const AudioBookCard = ({ data }: { data: IAudioBookCard }) => {
-  const { name, author, image, time, isActive = false } = data;
+const AudioBookCard = ({ data }: { data: IBookData }) => {
+  const { image, author, title } = data;
+  const { firstName, lastName } = author;
 
   return (
-    <Box className={isActive ? "audio-book-card active" : "audio-book-card"}>
-      {isActive ? (
-        <img src={audioCard} alt="audio card" className="audio-card-img" />
-      ) : (
-        <></>
-      )}
+    <Box className="audio-book-card">
       <Box className="audio-book-card-image">
-        <img src={image} alt="dunyoning ishlari" className="image" />
+        <img
+          src={image || DefaultBookImage}
+          alt="dunyoning ishlari"
+          className="image"
+        />
       </Box>
       <Box>
-        <Typography className="card-name">{name}</Typography>
-        <Typography className="text text-10 text-gray">{author}</Typography>
+        <Typography className="card-name">{title}</Typography>
+        <Typography className="text text-10 text-gray">
+          {firstName} {lastName}
+        </Typography>
       </Box>
       <Box>
-        <Typography className="text text-10 text-gray">{time}</Typography>
+        <Typography className="text text-10 text-gray"></Typography>
       </Box>
     </Box>
   );

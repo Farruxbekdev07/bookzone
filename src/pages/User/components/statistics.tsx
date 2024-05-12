@@ -1,17 +1,24 @@
 import React from "react";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Slider, Typography } from "@mui/material";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import WindowIcon from "@mui/icons-material/Window";
 import { IStatisticsData } from "../../../interfaces";
 import { Book1 } from "../../../assets";
 
 function Statistics({ data }: { data: Array<IStatisticsData> }) {
+  const [value, setValue] = React.useState<number>(30);
+
+  const handleChange = (event: Event, newValue: number | number[]) => {
+    setValue(newValue as number);
+    console.log(value);
+  };
+
   return (
     <>
       <Box className="user-main-statistics">
         <Box className="statistics-title">
           <Typography className="text text-yellow text-22">
-            Hozir o'qilmoqda..
+            Currently being read..
           </Typography>
           <WindowIcon className="grid-icon" />
         </Box>
@@ -34,12 +41,17 @@ function Statistics({ data }: { data: Array<IStatisticsData> }) {
                 </Box>
                 <Box className="progress-bar-wrapper">
                   <Box className="progress-bar">
-                    <Box
+                    {/* <Box
                       className="progress"
                       sx={{
                         width: `${item?.progress}%`,
                       }}
-                    ></Box>
+                    ></Box> */}
+                    <Slider
+                      aria-label="Volume"
+                      value={value}
+                      onChange={handleChange}
+                    />
                   </Box>
                   <Button className="progress-bar-button" variant="contained">
                     Yangilash <RefreshIcon />

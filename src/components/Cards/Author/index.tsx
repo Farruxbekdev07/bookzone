@@ -13,17 +13,25 @@ import { pxToRem } from "../../../utils";
 import { useNavigate } from "react-router-dom";
 import paths from "../../../constants/paths";
 import { DefaultAuthorImage } from "../../../assets";
+import { useDispatch } from "react-redux";
+import { addAuthor } from "../../../store/slices/BookSlice";
 
 const { AUTHOR__DETAILS } = paths;
 
 function CustomAuthorCard({ data }: { data: IAuthorData }) {
-  const { firstName, lastName, date_of_birth, date_of_death, image } = data;
+  const { firstName, lastName, date_of_birth, date_of_death, image, _id } =
+    data || {};
   const { yellow } = colors;
   const navigate = useNavigate();
   const birthYear = new Date(date_of_birth).getFullYear();
   const deathYear = new Date(date_of_death).getFullYear();
+  const dispatch = useDispatch();
+
   const handleClick = () => {
     navigate(AUTHOR__DETAILS);
+    const id: Object | any = { authorId: _id };
+    dispatch(addAuthor(id));
+    console.log(_id);
   };
 
   return (

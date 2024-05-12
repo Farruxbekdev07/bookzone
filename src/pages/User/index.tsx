@@ -1,6 +1,7 @@
+/* eslint-disable array-callback-return */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect } from "react";
-import { Avatar, Box, Typography } from "@mui/material";
+import { Avatar, Box, Skeleton, Typography } from "@mui/material";
 import Container from "../../components/Container";
 import star from "../../assets/images/star.png";
 import { StyledComponent } from "../Styles/style";
@@ -10,13 +11,14 @@ import CustomTabs from "../../components/Tabs/customTabs";
 import CustomTabPanel from "../../components/Tabs";
 import { IBookData, ITabsData } from "../../interfaces";
 import CustomBookCard from "../../components/Cards/Books";
-import { audioBookData, userTabData } from "../../constants/data";
+import { audioBookData } from "../../constants/data";
 import { UserInfoStyles } from "./style";
 import Header from "../../components/Header";
 import { api } from "../../utils/api";
 import { useQuery } from "@tanstack/react-query";
-import axios from "axios";
 import { useSelector } from "react-redux";
+import { getDataWithToken, pxToRem } from "../../utils";
+import NoData from "../../components/NoData";
 
 interface IMonthsData {
   key: number;
@@ -75,22 +77,60 @@ const monthData: IMonthsData[] = [
 ];
 
 function Home() {
-  const { baseUrl, usersApi } = api;
-  const apiUrl = baseUrl + usersApi;
-  const [value, setValue] = React.useState(0);
   const token = useSelector((state: any) => state.auth.token);
-  const expireDate = useSelector((state: any) => state.auth.expireDate);
-  const getUsers = async () => {
-    const response = await axios.get(apiUrl, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response?.data;
-  };
-  const { data, refetch } = useQuery({
-    queryKey: ["users"],
-    queryFn: () => getUsers(),
+  const { baseUrl, usersApi, booksApi } = api;
+  const usersApiUrl = baseUrl + usersApi;
+  const booksApiUrl = baseUrl + booksApi;
+  const [value, setValue] = React.useState(0);
+  const { data: getBookData } = useQuery({
+    queryKey: ["books"],
+    queryFn: () => getDataWithToken(booksApiUrl, token),
   });
-  const { user } = data || {};
+  const {
+    data: getUserData,
+    refetch,
+    isLoading,
+  } = useQuery({
+    queryKey: ["users"],
+    queryFn: () => getDataWithToken(usersApiUrl, token),
+  });
+
+  const userTabData: ITabsData[] = [
+    {
+      index: 0,
+      label: "All",
+      data: getBookData?.payload?.docs,
+    },
+    {
+      index: 1,
+      label: "Classic",
+      data: getBookData?.payload?.docs.filter((item: IBookData) => {
+        if (item?.category === "classic") {
+          return item;
+        }
+      }),
+    },
+    {
+      index: 2,
+      label: "Biography",
+      data: getBookData?.payload?.docs.filter((item: IBookData) => {
+        if (item?.category === "biography") {
+          return item;
+        }
+      }),
+    },
+    {
+      index: 3,
+      label: "Science",
+      data: getBookData?.payload?.docs.filter((item: IBookData) => {
+        if (item?.category === "science") {
+          return item;
+        }
+      }),
+    },
+  ];
+
+  const { user } = getUserData || {};
   const { firstName, lastName, date_of_birth, image } = user || {};
   const date = new Date(date_of_birth);
   const getMonth = date.getMonth();
@@ -102,13 +142,9 @@ function Home() {
   )[0];
   const { month } = monthFilter || {};
 
-  const handleClick = () => {
-    const expire = new Date(expireDate);
-    console.log(expire);
-  };
-
   useEffect(() => {
     refetch();
+    console.log(getBookData?.payload?.docs);
   }, []);
 
   return (
@@ -117,51 +153,110 @@ function Home() {
       <Container>
         <StyledComponent>
           <UserInfoStyles>
-            <Box className="info" onClick={handleClick}>
+            <Box className="info">
               <Box className="info-box">
                 <Box className="info-image-wrapper">
-                  <Box className="info-image">
-                    <Avatar
-                      alt="Remy Sharp"
-                      src={image || ""}
-                      className="user-avatar"
-                    >
-                      {image ? "" : name}
-                    </Avatar>
-                    <Avatar className="star" src={star || ""} />
-                  </Box>
-                  <Typography className="text text-yellow text-center mt-10 text-22">
-                    Oltin Kitobxon
-                  </Typography>
-                  <Typography className="text text-white text-center mt-10 text-22">
-                    186 ta kitob o'qigan
-                  </Typography>
+                  {!isLoading ? (
+                    <Skeleton
+                      sx={{
+                        bgcolor: "grey.800",
+                      }}
+                      variant="circular"
+                      width={pxToRem(180)}
+                      height={pxToRem(180)}
+                    />
+                  ) : (
+                    <Box className="info-image">
+                      <Avatar
+                        alt="Remy Sharp"
+                        src={image || ""}
+                        className="user-avatar"
+                      >
+                        {image ? "" : name?.toUpperCase()}
+                      </Avatar>
+                      <Avatar className="star" src={star || ""} />
+                    </Box>
+                  )}
+                  {!isLoading ? (
+                    <></>
+                  ) : (
+                    <>
+                      <Typography className="text text-yellow text-center mt-10 text-22">
+                        Oltin Kitobxon
+                      </Typography>
+                      <Typography className="text text-white text-center mt-10 text-22">
+                        186 ta kitob o'qigan
+                      </Typography>
+                    </>
+                  )}
                 </Box>
                 <Box className="info-bio-wrapper">
-                  <Typography className="text text-yellow text-32">
-                    {firstName || "User Name"} {lastName || ""}
-                  </Typography>
-                  <Typography className="text text-white flex gap-10 mt-10 text-22">
-                    Tavallud:
-                    <Typography className="text opacity-60 text-22">
-                      {" "}
-                      {month || 0} {day || 0}, {year || 0}
-                    </Typography>
-                  </Typography>
-                  <Typography className="text text-white flex gap-10 mt-10 text-22">
-                    Manzili:
-                    <Typography className="text opacity-60 text-22">
-                      {" "}
-                      Jizzax
-                    </Typography>
-                  </Typography>
-                  <Typography className="text text-white flex gap-10 mt-10 text-22">
-                    Bio:
-                    <Typography className="text opacity-60 text-22">
-                      {" "}
-                      Graphic designer and Developer
-                    </Typography>
-                  </Typography>
+                  {!isLoading ? (
+                    <>
+                      <Skeleton
+                        sx={{
+                          bgcolor: "grey.800",
+                        }}
+                        variant="rectangular"
+                        width={pxToRem(400)}
+                        height={pxToRem(30)}
+                      />
+                      <Skeleton
+                        sx={{
+                          bgcolor: "grey.800",
+                          mt: pxToRem(10),
+                        }}
+                        variant="rectangular"
+                        width={pxToRem(350)}
+                        height={pxToRem(30)}
+                      />
+                      <Skeleton
+                        sx={{
+                          bgcolor: "grey.800",
+                          mt: pxToRem(10),
+                        }}
+                        variant="rectangular"
+                        width={pxToRem(300)}
+                        height={pxToRem(30)}
+                      />
+                      <Skeleton
+                        sx={{
+                          bgcolor: "grey.800",
+                          mt: pxToRem(10),
+                        }}
+                        variant="rectangular"
+                        width={pxToRem(250)}
+                        height={pxToRem(30)}
+                      />
+                    </>
+                  ) : (
+                    <>
+                      <Typography className="text text-yellow text-32">
+                        {firstName || "User Name"} {lastName || ""}
+                      </Typography>
+                      <Typography className="text text-white flex gap-10 mt-10 text-22">
+                        Tavallud:
+                        <Typography className="text opacity-60 text-22">
+                          {" "}
+                          {month || 0} {day || 0}, {year || 0}
+                        </Typography>
+                      </Typography>
+                      <Typography className="text text-white flex gap-10 mt-10 text-22">
+                        Manzili:
+                        <Typography className="text opacity-60 text-22">
+                          {" "}
+                          Jizzax
+                        </Typography>
+                      </Typography>
+                      <Typography className="text text-white flex gap-10 mt-10 text-22">
+                        Bio:
+                        <Typography className="text opacity-60 text-22">
+                          {" "}
+                          Graphic designer and Developer
+                        </Typography>
+                      </Typography>
+                    </>
+                  )}
                 </Box>
               </Box>
             </Box>
@@ -176,18 +271,29 @@ function Home() {
                   setValue={setValue}
                   data={userTabData}
                 />
-                {userTabData?.map((item: ITabsData) => {
-                  const { index, data } = item;
-                  return (
-                    <CustomTabPanel value={value} index={index | 0}>
-                      <Box className="card-container">
-                        {data?.map((item: IBookData) => {
-                          return <CustomBookCard data={item} />;
-                        })}
-                      </Box>
-                    </CustomTabPanel>
-                  );
-                })}
+                {getBookData ? (
+                  <Box>
+                    {userTabData?.map((item: ITabsData) => {
+                      const { index, data } = item;
+                      if (value === index) {
+                        if (data?.length !== 0) {
+                          return (
+                            <CustomTabPanel value={value} index={index}>
+                              <Box className="card-container">
+                                {data?.map((item: IBookData) => {
+                                  return <CustomBookCard data={item} />;
+                                })}
+                              </Box>
+                            </CustomTabPanel>
+                          );
+                        }
+                        return <NoData />;
+                      }
+                    })}
+                  </Box>
+                ) : (
+                  <NoData />
+                )}
               </Box>
             </Box>
           </UserInfoStyles>

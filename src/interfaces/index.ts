@@ -34,13 +34,26 @@ export interface IRoute {
   key?: string;
 }
 export interface IBookData {
+  _id?: string;
   image?: File | string | any;
   title: string;
-  author?: string;
+  author?: Object[] | any;
   rate?: number;
   views?: number;
+  pages?: number | string;
+  description?: string;
+  comments?: Object[] | any;
+  year?: number | string;
+  category?: string;
+  country?: string;
+  createdAt?: string | any;
+  isFeatured?: boolean;
+  isPublished?: boolean;
+  language?: string;
+  link?: string;
 }
 export interface IAuthorData {
+  _id?: string;
   image?: File | string | any;
   firstName?: string;
   lastName?: string;

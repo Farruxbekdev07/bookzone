@@ -43,9 +43,10 @@ function SignIn() {
 
   const { mutate, data } = useMutation({
     mutationFn: (user: IUserData) => handleLogin(user),
-    onError: (err) => {
+    onError: (err: any) => {
       console.log(data);
-      toast.error(err.message);
+      console.log(err?.response);
+      toast.error(err?.response?.data?.msg);
     },
     onSuccess: (data) => {
       const currentTime: any = new Date();

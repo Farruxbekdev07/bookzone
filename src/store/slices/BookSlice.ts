@@ -1,23 +1,23 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-interface IInitialState {
-  bookId: string | null;
-  authorId: string | null;
+interface IState {
+  bookId?: string | null;
+  authorId?: string | null;
 }
 
-const initialState: IInitialState = {
+const initialState: IState = {
   bookId: null,
   authorId: null,
 };
 
 const book = createSlice({
-  name: "auth",
+  name: "book",
   initialState,
   reducers: {
-    addBook(state: IInitialState, action: void | any) {
+    addBook(state: IState, action: void | any) {
       state.bookId = action?.payload;
     },
-    addAuthor(state: IInitialState, action: void | any) {
+    addAuthor(state: IState, action: void | any) {
       state.authorId = action?.payload;
     },
   },

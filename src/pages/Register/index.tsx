@@ -48,8 +48,8 @@ function SignUp() {
 
   const { mutate } = useMutation({
     mutationFn: (user: IUserData) => handleRegister(user),
-    onError: (err) => {
-      toast.error(err.message);
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.msg);
     },
     onSuccess: (data) => {
       dispatch(login(data));
@@ -238,8 +238,7 @@ function SignUp() {
                         {...field}
                         error={!!errors[field.name]}
                         helperText={
-                          !!errors[field.name] &&
-                          "Please enter your address!"
+                          !!errors[field.name] && "Please enter your address!"
                         }
                       />
                     </FormControl>

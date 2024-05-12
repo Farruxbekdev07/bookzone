@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from "react";
 import {
   Card,
@@ -10,19 +11,26 @@ import StarIcon from "@mui/icons-material/Star";
 import { colors } from "../../../constants/colors";
 import { IBookData } from "../../../interfaces";
 import { pxToRem } from "../../../utils";
-import { Book1 } from "../../../assets";
+import { DefaultBookImage } from "../../../assets";
 import { useNavigate } from "react-router-dom";
 import paths from "../../../constants/paths";
+import { addBook } from "../../../store/slices/BookSlice";
+import { useDispatch } from "react-redux";
 
 const { BOOKS__DETAILS } = paths;
 
 function CustomBookCard({ data }: { data: IBookData }) {
-  const { author, image, rate, title, views } = data;
+  const { author, image, rate, title, views, _id } = data || {};
+  const { firstName, lastName, date_of_birth, date_of_death } = author || {};
   const { yellow } = colors;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const handleClick = () => {
     navigate(BOOKS__DETAILS);
+    const id: Object | any = { bookId: _id };
+    dispatch(addBook(id));
+    console.log(_id);
   };
 
   return (
@@ -38,7 +46,7 @@ function CustomBookCard({ data }: { data: IBookData }) {
       <CardActionArea>
         <CardMedia
           component="img"
-          image={image || Book1}
+          image={image || DefaultBookImage}
           alt={title || "book"}
           sx={{ borderRadius: pxToRem(15) }}
         />
@@ -58,7 +66,7 @@ function CustomBookCard({ data }: { data: IBookData }) {
             variant="h4"
             sx={{ fontSize: pxToRem(16), color: "gray" }}
           >
-            {author}
+            {firstName} {lastName}
           </Typography>
           <Typography
             variant="subtitle1"

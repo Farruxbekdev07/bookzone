@@ -222,10 +222,11 @@ export const UserInfoStyles = styled.div`
         width: 100%;
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
         padding: ${pxToRem(20)} ${pxToRem(0)};
         gap: ${pxToRem(10)};
+        max-height: ${pxToRem(400)};
+        overflow: auto;
 
         .audio-book-card {
           display: flex;
@@ -255,6 +256,9 @@ export const UserInfoStyles = styled.div`
           opacity: 1;
           background-color: transparent;
           border: ${pxToRem(2)} solid ${yellow};
+        }
+        &::-webkit-scrollbar {
+          background-color: transparent;
         }
       }
     }
