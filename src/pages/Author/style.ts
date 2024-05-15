@@ -9,7 +9,6 @@ export const HomePageStyles = styled.div`
     height: 50vh;
     display: flex;
     align-items: end;
-    padding: ${pxToRem(0)} ${pxToRem(100)};
 
     .search-bar {
       width: 100%;
@@ -28,6 +27,7 @@ export const HomePageStyles = styled.div`
         justify-content: center;
         align-items: center;
         gap: ${pxToRem(20)};
+        padding: ${pxToRem(0)} ${pxToRem(20)};
 
         .search-input {
           background-color: rgba(64, 64, 64, 1);
@@ -132,6 +132,7 @@ export const DetailPageStyle = styled.div`
           display: flex;
           justify-content: space-between;
           align-items: center;
+          gap: ${pxToRem(20)};
           padding: ${pxToRem(30)} ${pxToRem(0)};
         }
       }

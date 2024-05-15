@@ -10,14 +10,13 @@ import {
 import { useForm, Controller, FieldValues } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import paths from "../../constants/paths";
-import { pxToRem } from "../../utils";
+import { postData, pxToRem } from "../../utils";
 import { RegisterComponent } from "../Styles/style";
 import { SignUpImage } from "../../assets";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "../../utils/api";
 import RoleSelect from "../../components/Select";
 import { IUserData } from "../../interfaces";
-import axios from "axios";
 import { useDispatch } from "react-redux";
 import { login } from "../../store/slices/AuthSlice";
 import { toast } from "react-toastify";
@@ -35,11 +34,6 @@ function SignUp() {
   const navigate = useNavigate();
   const apiUrl = baseUrl + registerApi;
 
-  const handleRegister = async (user: IUserData) => {
-    const response = await axios.post(apiUrl, user);
-    return response.data;
-  };
-
   const {
     handleSubmit,
     control,
@@ -47,7 +41,7 @@ function SignUp() {
   } = useForm();
 
   const { mutate } = useMutation({
-    mutationFn: (user: IUserData) => handleRegister(user),
+    mutationFn: (user: IUserData) => postData(apiUrl, user),
     onError: (err: any) => {
       toast.error(err?.response?.data?.msg);
     },

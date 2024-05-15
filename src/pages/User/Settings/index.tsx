@@ -12,6 +12,9 @@ import UserHeader from "../components/Header";
 import { pxToRem } from "../../../utils";
 import { FieldValues, useForm } from "react-hook-form";
 import { AccountStyles } from "../Profile/style";
+import { useNavigate } from "react-router-dom";
+import paths from "../../../constants/paths";
+const { USER } = paths;
 
 const currencies = [
   {
@@ -28,11 +31,12 @@ const currencies = [
 function Settings() {
   const [checked, setChecked] = React.useState(true);
   const matches = useMediaQuery(`(min-width: ${pxToRem(864)})`);
+  const navigate = useNavigate();
 
   const { handleSubmit } = useForm();
 
   const handleFinish = async (data: FieldValues) => {
-    console.log(data);
+    navigate(USER);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {

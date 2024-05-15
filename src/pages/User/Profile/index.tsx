@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Avatar,
   Box,
@@ -14,33 +14,49 @@ import UserHeader from "../components/Header";
 import { AccountStyles } from "./style";
 import { Camera, DefaultAuthorImage } from "../../../assets";
 import { Controller, FieldValues, useForm } from "react-hook-form";
-import { pxToRem } from "../../../utils";
+import { getUsers, patchData, pxToRem } from "../../../utils";
 import { useSelector } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { api } from "../../../utils/api";
-import axios from "axios";
+import { IUserData } from "../../../interfaces";
+import { toast } from "react-toastify";
+import paths from "../../../constants/paths";
+import { useNavigate } from "react-router-dom";
+const { USER } = paths;
 
 function Profile() {
   const matches = useMediaQuery(`(min-width: ${pxToRem(864)})`);
   const token = useSelector((state: any) => state.auth.token);
   const { baseUrl, usersApi } = api;
   const apiUrl = baseUrl + usersApi;
-  const getUsers = async () => {
-    const response = await axios.get(apiUrl, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response?.data;
-  };
-  const { data, refetch } = useQuery({
+  const navigate = useNavigate();
+
+  const {
+    data: getUserData,
+    isLoading: getUserLoading,
+    isError: getUserError,
+    refetch: getUserDataRefetch,
+  } = useQuery({
     queryKey: ["users"],
-    queryFn: () => getUsers(),
+    queryFn: () => getUsers(apiUrl, token),
   });
-  const { user } = data || {};
+  const { user } = getUserData?.data || {};
   const { firstName, lastName, image, phone, email } = user || {};
 
-  useEffect(() => {
-    refetch();
-  }, []);
+  const { mutate } = useMutation({
+    mutationFn: (user: IUserData) => patchData(apiUrl, user, token),
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.error);
+    },
+    onSuccess: () => {
+      toast.success("Successfully completed");
+      navigate(USER);
+    },
+  });
+
+  React.useEffect(() => {
+    getUserDataRefetch();
+  }, [getUserLoading, getUserError]);
 
   const {
     handleSubmit,
@@ -48,8 +64,8 @@ function Profile() {
     formState: { errors },
   } = useForm();
 
-  const handleFinish = async (data: FieldValues) => {
-    console.log(data);
+  const handleFinish = async (data: FieldValues | any) => {
+    mutate(data);
   };
 
   return (
@@ -71,7 +87,7 @@ function Profile() {
           <Box className="input-wrapper">
             <Typography className="input-label">First Name</Typography>
             <Controller
-              name="first-name"
+              name="firstName"
               rules={{
                 required: true,
               }}
@@ -97,7 +113,7 @@ function Profile() {
           <Box className="input-wrapper">
             <Typography className="input-label">Last Name</Typography>
             <Controller
-              name="last-name"
+              name="lastName"
               rules={{
                 required: true,
               }}

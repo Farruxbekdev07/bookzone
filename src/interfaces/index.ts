@@ -3,11 +3,6 @@ export interface ITabsData {
   label: string;
   data?: Object | any;
 }
-export interface IStatisticsData {
-  image?: File | string | any;
-  title?: string;
-  progress?: string | number;
-}
 export interface IContainerData {
   children: JSX.Element | any;
 }
@@ -20,13 +15,6 @@ export interface ITabPanel {
   children?: React.ReactNode;
   index: number;
   value: number;
-}
-export interface IAudioBookCard {
-  image?: string | any;
-  name: string;
-  author?: string;
-  time?: number | string;
-  isActive?: boolean;
 }
 export interface IRoute {
   path: string;

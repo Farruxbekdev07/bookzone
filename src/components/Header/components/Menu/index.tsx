@@ -10,12 +10,11 @@ import Tooltip from "@mui/material/Tooltip";
 import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
-import { pxToRem } from "../../../../utils";
+import { getUsers, pxToRem } from "../../../../utils";
 import { AccountMenuComponent } from "../style";
 import { useNavigate } from "react-router-dom";
 import paths from "../../../../constants/paths";
 import { useSelector } from "react-redux";
-import axios from "axios";
 import { api } from "../../../../utils/api";
 import { useQuery } from "@tanstack/react-query";
 import ResponsiveDialog from "../../../Dialog";
@@ -30,15 +29,12 @@ export default function AccountMenu() {
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
 
-  const getUsers = async () => {
-    const response = await axios.get(apiUrl, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    return response?.data;
-  };
+  const { data: getUserData } = useQuery({
+    queryKey: ["users"],
+    queryFn: () => getUsers(apiUrl, token),
+  });
 
-  const { data } = useQuery({ queryKey: ["users"], queryFn: () => getUsers() });
-  const { user } = data || {};
+  const { user } = getUserData?.data || {};
   const { firstName, image } = user || {};
   const name = firstName?.slice(0, 1);
 

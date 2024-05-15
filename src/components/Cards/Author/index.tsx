@@ -1,6 +1,5 @@
 import React from "react";
 import {
-  Box,
   Card,
   CardActionArea,
   CardContent,
@@ -29,9 +28,8 @@ function CustomAuthorCard({ data }: { data: IAuthorData }) {
 
   const handleClick = () => {
     navigate(AUTHOR__DETAILS);
-    const id: Object | any = { authorId: _id };
-    dispatch(addAuthor(id));
-    console.log(_id);
+    const authorId: string | any = _id;
+    dispatch(addAuthor(authorId));
   };
 
   return (
@@ -51,7 +49,7 @@ function CustomAuthorCard({ data }: { data: IAuthorData }) {
           component="img"
           image={image || DefaultAuthorImage}
           alt={firstName || "book"}
-          height={"285rem"}
+          height={"225rem"}
           sx={image ? { objectPosition: "center" } : { objectPosition: "top" }}
         />
         <CardContent sx={{ padding: pxToRem(20) }}>
@@ -81,7 +79,7 @@ function CustomAuthorCard({ data }: { data: IAuthorData }) {
               {birthYear} - yilda tug'ilgan
             </Typography>
           )}
-          <Box
+          {/* <Box
             sx={{
               display: "flex",
               justifyContent: "space-between",
@@ -92,15 +90,15 @@ function CustomAuthorCard({ data }: { data: IAuthorData }) {
               variant="body1"
               sx={{ fontSize: pxToRem(18), color: "white" }}
             >
-              {/* {books} */}0
+              {books}0
             </Typography>
             <Typography
               variant="body1"
               sx={{ fontSize: pxToRem(18), color: "white" }}
             >
-              {/* {audioBooks} */}0
+              {audioBooks}0
             </Typography>
-          </Box>
+          </Box> */}
         </CardContent>
       </CardActionArea>
     </Card>

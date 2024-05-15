@@ -7,7 +7,7 @@ export const api = {
   authorsApi: "/api/authors",
   booksApi: "/api/books",
   myBooksApi: "/api/books/my-books",
-  authorBooksApi: "/api/books/my-books",
+  authorBooksApi: "/api/books/author",
   searchBooksApi: "/api/books/my-books",
   booksCommentApi: "/api/books/comment",
   filesApi: "/api/files",

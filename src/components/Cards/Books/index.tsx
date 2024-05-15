@@ -14,76 +14,49 @@ import { pxToRem } from "../../../utils";
 import { DefaultBookImage } from "../../../assets";
 import { useNavigate } from "react-router-dom";
 import paths from "../../../constants/paths";
-import { addBook } from "../../../store/slices/BookSlice";
+import { addBook, addKey } from "../../../store/slices/BookSlice";
 import { useDispatch } from "react-redux";
+import { CardStyles } from "./style";
 
 const { BOOKS__DETAILS } = paths;
 
 function CustomBookCard({ data }: { data: IBookData }) {
   const { author, image, rate, title, views, _id } = data || {};
-  const { firstName, lastName, date_of_birth, date_of_death } = author || {};
-  const { yellow } = colors;
+  const { firstName, lastName } = author || {};
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const handleClick = () => {
     navigate(BOOKS__DETAILS);
-    const id: Object | any = { bookId: _id };
-    dispatch(addBook(id));
-    console.log(_id);
+    const bookId: string | any = _id;
+    dispatch(addBook(bookId));
   };
 
   return (
-    <Card
-      sx={{
-        minWidth: 225,
-        minHeight: 325,
-        backgroundColor: "transparent",
-        boxShadow: "none",
-      }}
-      onClick={handleClick}
-    >
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          image={image || DefaultBookImage}
-          alt={title || "book"}
-          sx={{ borderRadius: pxToRem(15) }}
-        />
-        <CardContent
-          sx={{
-            padding: `${pxToRem(16)} ${pxToRem(0)} ${pxToRem(0)} ${pxToRem(0)}`,
-          }}
-        >
-          <Typography
-            gutterBottom
-            variant="h1"
-            sx={{ fontSize: pxToRem(24), color: yellow, textWrap: "wrap" }}
-          >
-            {title}
-          </Typography>
-          <Typography
-            variant="h4"
-            sx={{ fontSize: pxToRem(16), color: "gray" }}
-          >
-            {firstName} {lastName}
-          </Typography>
-          <Typography
-            variant="subtitle1"
-            sx={{
-              fontSize: pxToRem(16),
-              color: "gray",
-              display: "flex",
-              alignItems: "center",
-              gap: pxToRem(5),
-            }}
-          >
-            <StarIcon sx={{ color: "white" }} />
-            {rate} • {views} ta fikrlar
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
+    <CardStyles>
+      <Card className="card" onClick={handleClick}>
+        <CardActionArea>
+          <CardMedia
+            component="img"
+            image={image || DefaultBookImage}
+            alt={title || "book"}
+            className="card-media"
+          />
+          <CardContent className="card-content">
+            <Typography gutterBottom variant="h1" className="card-title">
+              {title || ""}
+            </Typography>
+            <Typography variant="h4" className="card-author-name">
+              {firstName || ""} {lastName || ""}
+            </Typography>
+            <Typography variant="subtitle1" className="card-description">
+              <StarIcon className="card-star-icon" />
+              {rate || ""} • {views || ""} ta fikrlar
+            </Typography>
+          </CardContent>
+        </CardActionArea>
+      </Card>
+    </CardStyles>
   );
 }
 
