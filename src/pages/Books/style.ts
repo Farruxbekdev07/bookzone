@@ -16,7 +16,6 @@ export const BookDetailStyle = styled.div`
 
       img {
         width: 100%;
-        /* height: 100%; */
         object-fit: cover;
       }
     }
@@ -58,7 +57,7 @@ export const BookDetailStyle = styled.div`
         align-items: center;
         width: 100%;
         gap: ${pxToRem(20)};
-        margin: ${pxToRem(30)} ${pxToRem(0)};
+        margin: ${pxToRem(10)} ${pxToRem(0)};
 
         p {
           text-wrap: nowrap;

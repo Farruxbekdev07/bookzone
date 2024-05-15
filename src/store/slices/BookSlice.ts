@@ -3,11 +3,13 @@ import { createSlice } from "@reduxjs/toolkit";
 interface IState {
   bookId?: string | null;
   authorId?: string | null;
+  key?: string | any;
 }
 
 const initialState: IState = {
   bookId: null,
   authorId: null,
+  key: null,
 };
 
 const book = createSlice({
@@ -20,9 +22,12 @@ const book = createSlice({
     addAuthor(state: IState, action: void | any) {
       state.authorId = action?.payload;
     },
+    addKey(state: IState, action: void | any) {
+      state.key = action?.payload;
+    },
   },
 });
 
 export default book.reducer;
 
-export const { addAuthor, addBook } = book.actions;
+export const { addAuthor, addBook, addKey } = book.actions;

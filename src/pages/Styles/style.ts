@@ -168,6 +168,9 @@ export const StyledComponent = styled.div`
     align-items: center;
     height: 25vh;
   }
+  .pointer {
+    cursor: pointer;
+  }
 `;
 
 export const RegisterComponent = styled.div`
