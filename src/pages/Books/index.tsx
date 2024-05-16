@@ -16,9 +16,10 @@ import paths from "../../constants/paths";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../utils/api";
 import { useSelector } from "react-redux";
-import { getDataWithToken } from "../../utils";
+import { getDataWithToken, getUsers } from "../../utils";
 import NoData from "../../components/NoData";
 const { CREATE__BOOK } = paths;
+const { baseUrl, booksApi, usersApi } = api;
 
 function Books() {
   const token = useSelector((state: any) => state.auth.token);
@@ -26,8 +27,8 @@ function Books() {
   const [bookData, setBookData] = useState([]);
   const [value, setValue] = useState(0);
   const navigate = useNavigate();
-  const { baseUrl, booksApi } = api;
   const apiUrl = baseUrl + booksApi;
+  const usersApiUrl = baseUrl + usersApi;
 
   const {
     data: getBookData,
@@ -37,6 +38,15 @@ function Books() {
   } = useQuery({
     queryKey: ["books"],
     queryFn: () => getDataWithToken(apiUrl, token),
+  });
+
+  const {
+    data: getUserData,
+    isLoading: getUserLoading,
+    isError: getUserError,
+  } = useQuery({
+    queryKey: ["users"],
+    queryFn: () => getUsers(usersApiUrl, token),
   });
 
   const bookTabData: ITabsData[] = [
@@ -86,7 +96,7 @@ function Books() {
   React.useEffect(() => {
     refetch();
     setBookData(getBookData?.payload?.docs);
-  }, [isLoading, isSuccess]);
+  }, [isLoading, isSuccess, getUserLoading, getUserError]);
 
   return (
     <>
@@ -106,13 +116,17 @@ function Books() {
                 Asosiy Kategoriyalar
               </Typography>
               <Box className="home-page-tabs">
-                <Button
-                  className="create-book"
-                  variant="contained"
-                  onClick={() => navigate(CREATE__BOOK)}
-                >
-                  Crete Book
-                </Button>
+                {getUserData?.data?.user?.role === "author" ? (
+                  <Button
+                    className="create-book"
+                    variant="contained"
+                    onClick={() => navigate(CREATE__BOOK)}
+                  >
+                    Crete Book
+                  </Button>
+                ) : (
+                  <></>
+                )}
                 <CustomTabs
                   value={value}
                   setValue={setValue}

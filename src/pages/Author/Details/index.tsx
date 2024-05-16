@@ -83,7 +83,7 @@ function AuthorDetails() {
   const authorId = useSelector((state: any) => state.book?.authorId);
   const token = useSelector((state: any) => state.auth.token);
   const [authorDetailData, setAuthorDetailData] = React.useState({});
-  const [newBookData, setNewBookData] = React.useState([]);
+  const [newBookData, setNewBookData] = React.useState<any>([]);
   const authorsApiUrl = baseUrl + authorsApi;
   const booksApiUrl = baseUrl + booksApi;
   const navigate = useNavigate();
@@ -109,12 +109,20 @@ function AuthorDetails() {
   React.useEffect(() => {
     authorRefetch();
     bookRefetch();
+    const authorBooks: any[] = [];
     authorData?.payload?.filter((author: IAuthorData) => {
       if (author?._id === authorId) {
         setAuthorDetailData(author);
       }
     });
-    setNewBookData(bookData?.payload?.docs);
+    bookData?.payload?.docs?.filter((book: IBookData) => {
+      if (book?.author?._id === authorId) {
+        authorBooks.push(book);
+        console.log(authorBooks);
+        setNewBookData(authorBooks);
+      }
+    });
+    // setNewBookData(bookData?.payload?.docs);
     console.log(bookData?.payload?.docs);
   }, [authorLoading, authorId, bookLoading]);
 
@@ -320,7 +328,7 @@ function AuthorDetails() {
                   )}
                 </Box>
                 <Box>
-                  {bookData ? (
+                  {newBookData.length !== 0 ? (
                     <DetailCardWrapper>
                       {newBookData?.map((item: IBookData) => {
                         return <CustomBookCard data={item} />;

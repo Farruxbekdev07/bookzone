@@ -14,12 +14,12 @@ import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import NoData from "../../components/NoData";
 import { getDataWithToken } from "../../utils";
+const { baseUrl, authorsApi } = api;
 
 function Author() {
   const [inputChange, setInputChange] = React.useState("");
   const token = useSelector((state: any) => state.auth.token);
   const [authorData, setAuthorData] = React.useState([]);
-  const { baseUrl, authorsApi } = api;
   const authorsApiUrl = baseUrl + authorsApi;
   const {
     data: getAuthorData,
@@ -43,6 +43,7 @@ function Author() {
   React.useEffect(() => {
     refetch();
     setAuthorData(getAuthorData?.payload);
+    setInputChange("");
   }, [isLoading, isSuccess]);
 
   return (
@@ -52,17 +53,25 @@ function Author() {
         <StyledComponent>
           <HomePageStyles>
             <Box className="search-bar-container">
-              <SearchBar onChange={setInputChange} onClick={handleSearch} />
+              <SearchBar
+                onChange={setInputChange}
+                value={inputChange}
+                onClick={handleSearch}
+              />
             </Box>
             <Box className="home-page-container">
               <Box className="home-page-tabs">
                 {getAuthorData?.payload?.length !== 0 ? (
                   <Box>
-                    <Box className="card-container">
-                      {authorData?.map((item: IAuthorData) => {
-                        return <CustomAuthorCard data={item} />;
-                      })}
-                    </Box>
+                    {isLoading ? (
+                      <NoData />
+                    ) : (
+                      <Box className="card-container">
+                        {authorData?.map((item: IAuthorData) => {
+                          return <CustomAuthorCard data={item} />;
+                        })}
+                      </Box>
+                    )}
                   </Box>
                 ) : (
                   <NoData />

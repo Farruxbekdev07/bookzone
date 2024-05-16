@@ -6,21 +6,19 @@ import {
   CardMedia,
   Typography,
 } from "@mui/material";
-import { colors } from "../../../constants/colors";
 import { IAuthorData } from "../../../interfaces";
-import { pxToRem } from "../../../utils";
 import { useNavigate } from "react-router-dom";
 import paths from "../../../constants/paths";
 import { DefaultAuthorImage } from "../../../assets";
 import { useDispatch } from "react-redux";
 import { addAuthor } from "../../../store/slices/BookSlice";
+import { CardStyles } from "../Books/style";
 
 const { AUTHOR__DETAILS } = paths;
 
 function CustomAuthorCard({ data }: { data: IAuthorData }) {
   const { firstName, lastName, date_of_birth, date_of_death, image, _id } =
     data || {};
-  const { yellow } = colors;
   const navigate = useNavigate();
   const birthYear = new Date(date_of_birth).getFullYear();
   const deathYear = new Date(date_of_death).getFullYear();
@@ -33,75 +31,35 @@ function CustomAuthorCard({ data }: { data: IAuthorData }) {
   };
 
   return (
-    <Card
-      sx={{
-        maxWidth: pxToRem(225),
-        backgroundColor: "rgba(33, 33, 33, 1)",
-        boxShadow: `${pxToRem(10)} ${pxToRem(10)} ${pxToRem(
-          10
-        )} rgba(0, 0, 0, 0.02)`,
-        borderRadius: pxToRem(15),
-      }}
-      onClick={handleClick}
-    >
-      <CardActionArea>
-        <CardMedia
-          component="img"
-          image={image || DefaultAuthorImage}
-          alt={firstName || "book"}
-          height={"225rem"}
-          sx={image ? { objectPosition: "center" } : { objectPosition: "top" }}
-        />
-        <CardContent sx={{ padding: pxToRem(20) }}>
-          <Typography
-            gutterBottom
-            variant="h1"
-            sx={{
-              fontSize: pxToRem(24),
-              color: yellow,
-              textAlign: "center",
-            }}
-          >
-            {firstName} {lastName}
-          </Typography>
-          {date_of_death ? (
-            <Typography
-              variant="h4"
-              sx={{ fontSize: pxToRem(16), color: "gray", textAlign: "center" }}
-            >
-              {birthYear} - {deathYear}
+    <CardStyles>
+      <Card className="card card-author" onClick={handleClick}>
+        <CardActionArea>
+          <CardMedia
+            component="img"
+            className="card-media"
+            image={image || DefaultAuthorImage}
+            alt={firstName || "book"}
+            sx={
+              image ? { objectPosition: "center" } : { objectPosition: "top" }
+            }
+          />
+          <CardContent className="card-content">
+            <Typography gutterBottom variant="h1" className="card-title">
+              {firstName} {lastName}
             </Typography>
-          ) : (
-            <Typography
-              variant="h4"
-              sx={{ fontSize: pxToRem(16), color: "gray", textAlign: "center" }}
-            >
-              {birthYear} - yilda tug'ilgan
-            </Typography>
-          )}
-          {/* <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              padding: pxToRem(10),
-            }}
-          >
-            <Typography
-              variant="body1"
-              sx={{ fontSize: pxToRem(18), color: "white" }}
-            >
-              {books}0
-            </Typography>
-            <Typography
-              variant="body1"
-              sx={{ fontSize: pxToRem(18), color: "white" }}
-            >
-              {audioBooks}0
-            </Typography>
-          </Box> */}
-        </CardContent>
-      </CardActionArea>
-    </Card>
+            {date_of_death ? (
+              <Typography variant="h4" className="card-author-name">
+                {birthYear} - {deathYear}
+              </Typography>
+            ) : (
+              <Typography variant="h4" className="card-author-name">
+                {birthYear} - yilda tug'ilgan
+              </Typography>
+            )}
+          </CardContent>
+        </CardActionArea>
+      </Card>
+    </CardStyles>
   );
 }
 

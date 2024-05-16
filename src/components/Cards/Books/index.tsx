@@ -34,7 +34,7 @@ function CustomBookCard({ data }: { data: IBookData }) {
 
   return (
     <CardStyles>
-      <Card className="card" onClick={handleClick}>
+      <Card className="card card-book" onClick={handleClick}>
         <CardActionArea>
           <CardMedia
             component="img"

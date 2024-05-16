@@ -8,7 +8,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { CreateBookImage } from "../../../assets";
+import { CreateBookImage, DefaultBookImage } from "../../../assets";
 import { pxToRem } from "../../../utils";
 import paths from "../../../constants/paths";
 import { Controller, FieldValues, useForm } from "react-hook-form";
@@ -51,9 +51,11 @@ function CreateBook() {
       toast.success("Book created successfully");
       navigate(BOOKS);
     },
-    onError: (err) => {
-      toast.error(err?.message);
-      console.log(token);
+    onError: (err: any) => {
+      toast.error(err?.response?.data?.error);
+      if (err?.response?.status === 403) {
+        toast.error("You are not allowed to create a book");
+      }
     },
   });
 
@@ -74,8 +76,7 @@ function CreateBook() {
           }
         >
           <Box className="image-container">
-            <img src={CreateBookImage} alt="create book" />
-            <Typography className="image-name">Ulug'bek xazinasi</Typography>
+            <img src={DefaultBookImage} alt="create book" />
             <Button
               variant="contained"
               fullWidth
@@ -219,7 +220,13 @@ function CreateBook() {
                 );
               }}
             />
-            <RoleSelect control={control} errors={errors} roles={roles} name="category" label="Category" />
+            <RoleSelect
+              control={control}
+              errors={errors}
+              roles={roles}
+              name="category"
+              label="Category"
+            />
             <Controller
               name="description"
               rules={{

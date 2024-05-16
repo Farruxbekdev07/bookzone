@@ -1,6 +1,6 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Avatar,
   Box,
@@ -89,11 +89,7 @@ function Home() {
     queryKey: ["my-books"],
     queryFn: () => getDataWithToken(booksApiUrl, token),
   });
-  const {
-    data: getUserData,
-    isLoading: getUserLoading,
-    isError: getUserError,
-  } = useQuery({
+  const { data: getUserData, isLoading: getUserLoading } = useQuery({
     queryKey: ["users"],
     queryFn: () => getUsers(usersApiUrl, token),
   });
@@ -110,9 +106,16 @@ function Home() {
       data: getUserData?.data?.user?.shelf,
     },
   ];
+  const userShelfTab: ITabsData[] = [
+    {
+      index: 0,
+      label: "Shelf",
+      data: getUserData?.data?.user?.shelf,
+    },
+  ];
 
   const { user } = getUserData?.data || {};
-  const { firstName, lastName, date_of_birth, image, shelf }: any = user || {};
+  const { firstName, lastName, date_of_birth, image, role }: any = user || {};
   const date = new Date(date_of_birth);
   const getMonth = date.getMonth();
   const year = date.getFullYear();
@@ -122,12 +125,6 @@ function Home() {
     (item: IMonthsData) => item.key === getMonth
   )[0];
   const { month } = monthFilter || {};
-
-  useEffect(() => {
-    console.log(user);
-    console.log(shelf);
-    console.log(getBookData);
-  }, [getUserLoading, getUserError]);
 
   return (
     <>
@@ -221,30 +218,56 @@ function Home() {
             </Box>
             <Box className="user-main">
               <Box className="user-main-tabs">
-                <CustomTabs
-                  value={value}
-                  setValue={setValue}
-                  data={userTabData}
-                />
+                {role === "author" ? (
+                  <CustomTabs
+                    value={value}
+                    setValue={setValue}
+                    data={userTabData}
+                  />
+                ) : (
+                  <CustomTabs
+                    value={value}
+                    setValue={setValue}
+                    data={userShelfTab}
+                  />
+                )}
                 {getBookData ? (
                   <Box>
-                    {userTabData?.map((item: ITabsData) => {
-                      const { index, data } = item;
-                      if (value === index) {
-                        if (data?.length !== 0) {
-                          return (
-                            <CustomTabPanel value={value} index={index}>
-                              <Box className="card-container">
-                                {data?.map((item: IBookData) => {
-                                  return <CustomBookCard data={item} />;
-                                })}
-                              </Box>
-                            </CustomTabPanel>
-                          );
-                        }
-                        return <NoData />;
-                      }
-                    })}
+                    {role === "author"
+                      ? userTabData?.map((item: ITabsData) => {
+                          const { index, data } = item;
+                          if (value === index) {
+                            if (data?.length !== 0) {
+                              return (
+                                <CustomTabPanel value={value} index={index}>
+                                  <Box className="card-container">
+                                    {data?.map((item: IBookData) => {
+                                      return <CustomBookCard data={item} />;
+                                    })}
+                                  </Box>
+                                </CustomTabPanel>
+                              );
+                            }
+                            return <NoData />;
+                          }
+                        })
+                      : userShelfTab?.map((item: ITabsData) => {
+                          const { index, data } = item;
+                          if (value === index) {
+                            if (data?.length !== 0) {
+                              return (
+                                <CustomTabPanel value={value} index={index}>
+                                  <Box className="card-container">
+                                    {data?.map((item: IBookData) => {
+                                      return <CustomBookCard data={item} />;
+                                    })}
+                                  </Box>
+                                </CustomTabPanel>
+                              );
+                            }
+                            return <NoData />;
+                          }
+                        })}
                   </Box>
                 ) : (
                   <NoData />

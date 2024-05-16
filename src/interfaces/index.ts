@@ -47,6 +47,7 @@ export interface IAuthorData {
   lastName?: string;
   date_of_birth?: number | string | any;
   date_of_death?: number | string | any;
+  role?: string | any;
 }
 export interface IUserData {
   image?: File | string | any;
