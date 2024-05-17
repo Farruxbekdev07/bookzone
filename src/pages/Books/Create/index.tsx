@@ -8,7 +8,7 @@ import {
   Typography,
   useMediaQuery,
 } from "@mui/material";
-import { CreateBookImage, DefaultBookImage } from "../../../assets";
+import { DefaultBookImage } from "../../../assets";
 import { pxToRem } from "../../../utils";
 import paths from "../../../constants/paths";
 import { Controller, FieldValues, useForm } from "react-hook-form";
@@ -20,6 +20,8 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import RoleSelect from "../../../components/Select";
+const { BOOKS } = paths;
+const { baseUrl, filesApi, booksApi } = api;
 
 const roles = [
   { role: "classic", value: "Classic" },
@@ -30,10 +32,11 @@ const roles = [
 function CreateBook() {
   const matches = useMediaQuery(`(min-width: ${pxToRem(956)})`);
   const token = useSelector((state: any) => state.auth.token);
-  const { BOOKS } = paths;
-  const { baseUrl, booksApi } = api;
   const apiUrl = baseUrl + booksApi;
+  const uploadApiUrl = baseUrl + filesApi;
   const navigate = useNavigate();
+  const uploadRef = React.useRef<HTMLInputElement | null>(null);
+  const [file, setFile] = React.useState<File | null>(null);
 
   const {
     handleSubmit,
@@ -58,9 +61,37 @@ function CreateBook() {
       }
     },
   });
+  const { mutate: uploadMutation } = useMutation({
+    mutationFn: (fileData: IBookData) =>
+      axios.post(uploadApiUrl, fileData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }),
+    onSuccess: (data) => {
+      console.log(data?.data);
+    },
+    onError: (err: any) => {
+      console.log(err?.response?.data);
+    },
+  });
 
   const handleFinish = async (bookData: FieldValues | any) => {
     mutate(bookData);
+  };
+
+  const handleUploadClick = () => {
+    uploadRef.current?.click();
+  };
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      setFile(e.target.files[0]);
+      console.log(e.target.files[0]);
+    }
+  };
+  const handleUpload = async () => {
+    const fileData: any = { oldImg: file || null };
+    uploadMutation(fileData);
   };
 
   return (
@@ -77,15 +108,28 @@ function CreateBook() {
         >
           <Box className="image-container">
             <img src={DefaultBookImage} alt="create book" />
+            <input
+              type="file"
+              ref={uploadRef}
+              onChange={handleFileChange}
+              style={{ display: "none" }}
+            />
             <Button
               variant="contained"
               fullWidth
               className="create-button"
-              onClick={() => {}}
+              onClick={handleUploadClick}
             >
               Upload cover
             </Button>
-            <input type="file" className="file" />
+            <Button
+              variant="contained"
+              fullWidth
+              className="create-button"
+              onClick={handleUpload}
+            >
+              Upload
+            </Button>
           </Box>
         </Box>
         <Box
