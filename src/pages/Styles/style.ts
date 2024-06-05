@@ -4,6 +4,9 @@ import { pxToRem } from "../../utils";
 const { yellow, white, dark, gray, darkBlue } = colors;
 
 export const StyledComponent = styled.div`
+  .display-none {
+    display: none;
+  }
   .text {
     font-family: sans-serif;
     font-weight: 400;

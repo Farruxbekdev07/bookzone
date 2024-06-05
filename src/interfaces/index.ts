@@ -37,7 +37,7 @@ export interface IBookData {
   createdAt?: string | any;
   isFeatured?: boolean;
   isPublished?: boolean;
-  language?: string;
+  language?: string | any;
   link?: string;
 }
 export interface IAuthorData {

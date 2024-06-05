@@ -35,7 +35,6 @@ function RoleSelect({ control, errors, defaultValue, roles, name, label }: Props
             labelId="demo-simple-select-helper-label"
             {...field}
             defaultValue={defaultValue || ""}
-            // displayEmpty
             id="demo-simple-select-helper"
             label={label}
             error={!!errors[field.name]}

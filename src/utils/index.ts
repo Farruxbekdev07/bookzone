@@ -25,11 +25,12 @@ export const postData = async (
   token?: string
 ) => {
   const responseWithToken = await axios.post(apiUrl, data, {
-    headers: { Authorization: `Bearer ${token}` },
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
   });
-  const response = await axios.post(apiUrl, data, {
-    headers: { Authorization: `Bearer ${token}` },
-  });
+
+  const response = await axios.post(apiUrl, data);
   if (token) {
     return responseWithToken;
   } else {
@@ -45,4 +46,21 @@ export const patchData = async (
     headers: { Authorization: `Bearer ${token}` },
   });
   return response?.data;
+};
+export const shallowEqualityCheck = (obj1: any, obj2: any) => {
+  const keys1 = Object.keys(obj1);
+  const keys2 = Object.keys(obj2);
+  if (keys1.length !== keys2.length) {
+    return false;
+  }
+  for (const key of keys1) {
+    if (obj1[key] !== obj2[key]) {
+      console.log(false);
+      console.log(obj1);
+      console.log(obj2);
+      return false;
+    }
+  }
+  console.log(true);
+  return true;
 };

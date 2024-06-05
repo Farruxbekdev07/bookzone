@@ -8,21 +8,19 @@ import {
   Typography,
 } from "@mui/material";
 import StarIcon from "@mui/icons-material/Star";
-import { colors } from "../../../constants/colors";
 import { IBookData } from "../../../interfaces";
-import { pxToRem } from "../../../utils";
 import { DefaultBookImage } from "../../../assets";
 import { useNavigate } from "react-router-dom";
 import paths from "../../../constants/paths";
-import { addBook, addKey } from "../../../store/slices/BookSlice";
+import { addBook } from "../../../store/slices/BookSlice";
 import { useDispatch } from "react-redux";
 import { CardStyles } from "./style";
 
 const { BOOKS__DETAILS } = paths;
 
 function CustomBookCard({ data }: { data: IBookData }) {
-  const { author, image, rate, title, views, _id } = data || {};
-  const { firstName, lastName } = author || {};
+  const { author, image, rate, title, views, _id, language } = data || {};
+  const { firstName, lastName } = author;
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -38,7 +36,7 @@ function CustomBookCard({ data }: { data: IBookData }) {
         <CardActionArea>
           <CardMedia
             component="img"
-            image={image || DefaultBookImage}
+            image={image || DefaultBookImage || language}
             alt={title || "book"}
             className="card-media"
           />

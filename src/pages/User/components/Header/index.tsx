@@ -5,23 +5,13 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { INavBarData } from "../../../../interfaces";
 import paths from "../../../../constants/paths";
 
-const { PROFILE, SECURITY, SETTINGS } = paths;
+const { PROFILE } = paths;
 
 const data: INavBarData[] = [
   {
     value: "My Account",
     index: 1,
     path: PROFILE,
-  },
-  {
-    value: "Security",
-    index: 2,
-    path: SECURITY,
-  },
-  {
-    value: "Settings",
-    index: 3,
-    path: SETTINGS,
   },
 ];
 

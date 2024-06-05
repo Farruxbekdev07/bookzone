@@ -12,10 +12,12 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "./utils/api";
 import { Box } from "@mui/material";
 import axios from "axios";
+import { logoutAccounts } from "./store/slices/AccountSlice";
 const { baseUrl, usersApi } = api;
 
 function App() {
   const token = useSelector((state: any) => state.auth.token);
+  const accounts = useSelector((state: any) => state.accounts.accounts);
   const dispatch = useDispatch();
   const usersApiUrl = baseUrl + usersApi;
 
@@ -30,10 +32,12 @@ function App() {
       const status = error?.response?.status;
       if (status === 401) {
         dispatch(logout());
+        dispatch(logoutAccounts());
         toast.error(error.response?.data?.error);
       }
     }
-  }, [isLoading, isError]);
+    console.log(accounts, "\\\\\\\\\\\\\\ accounts \\\\\\\\\\\\\\\\\\\\");
+  }, [isLoading, isError, token]);
 
   if (token) {
     return (

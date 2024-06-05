@@ -17,6 +17,7 @@ function Container({ children }: IContainerData) {
         height: "100%",
         backgroundColor: `${background}`,
         minWidth: "90vw",
+        minHeight: "100vh",
       }}
     >
       {children}

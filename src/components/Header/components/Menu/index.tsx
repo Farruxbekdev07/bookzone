@@ -1,3 +1,5 @@
+/* eslint-disable array-callback-return */
+/* eslint-disable react-hooks/exhaustive-deps */
 import * as React from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
@@ -7,35 +9,42 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Divider from "@mui/material/Divider";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
-import PersonAdd from "@mui/icons-material/PersonAdd";
 import Settings from "@mui/icons-material/Settings";
 import Logout from "@mui/icons-material/Logout";
 import { getUsers, pxToRem } from "../../../../utils";
 import { AccountMenuComponent } from "../style";
 import { useNavigate } from "react-router-dom";
 import paths from "../../../../constants/paths";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { api } from "../../../../utils/api";
 import { useQuery } from "@tanstack/react-query";
 import ResponsiveDialog from "../../../Dialog";
+import { login } from "../../../../store/slices/AuthSlice";
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [openDialog, setOpenDialog] = React.useState(false);
   const token = useSelector((state: any) => state.auth.token);
-  const { PROFILE, SETTINGS, REGISTER } = paths;
+  const accounts = useSelector((state: any) => state.accounts.accounts);
+  const dispatch = useDispatch();
+  const { PROFILE } = paths;
   const { baseUrl, usersApi } = api;
   const apiUrl = baseUrl + usersApi;
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
 
-  const { data: getUserData } = useQuery({
+  const {
+    data: getUserData,
+    isLoading,
+    isError,
+    refetch,
+  } = useQuery({
     queryKey: ["users"],
     queryFn: () => getUsers(apiUrl, token),
   });
 
   const { user } = getUserData?.data || {};
-  const { firstName, image } = user || {};
+  const { firstName, image, _id } = user || {};
   const name = firstName?.slice(0, 1);
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -53,6 +62,19 @@ export default function AccountMenu() {
   const handleClickOpen = () => {
     setOpenDialog(true);
   };
+
+  const handleSwitchAccount = (switchAccountID: string) => {
+    accounts?.filter((switchUser: any) => {
+      if (switchUser?.user._id === switchAccountID) {
+        dispatch(login(switchUser));
+        refetch();
+      }
+    });
+  };
+
+  React.useEffect(() => {
+    refetch();
+  }, [isLoading, isError, token]);
 
   return (
     <AccountMenuComponent>
@@ -108,20 +130,42 @@ export default function AccountMenu() {
         transformOrigin={{ horizontal: "right", vertical: "top" }}
         anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
       >
-        <MenuItem onClick={() => handleNavigate(PROFILE)}>
-          <Avatar className="avatar" src={image || ""}>
-            {image ? "" : name?.toUpperCase()}
-          </Avatar>{" "}
-          Profile
-        </MenuItem>
+        {accounts.length !== 0 ? (
+          <>
+            {accounts?.map((switchUser: any) => {
+              const { user: switchAccountUser } = switchUser || {};
+              const {
+                firstName: switchAccountFirstName,
+                lastName: switchAccountLastName,
+                image: switchAccountImage,
+                _id: switchAccountId,
+              } = switchAccountUser || {};
+              const switchAccountName = switchAccountFirstName?.slice(0, 1);
+              return (
+                <MenuItem
+                  onClick={() => handleSwitchAccount(switchAccountId || "")}
+                  sx={{
+                    background: `${_id === switchAccountId ? "lightgray" : ""}`,
+                    ":hover": {
+                      background: `${
+                        _id === switchAccountId ? "lightgray" : ""
+                      }`,
+                    },
+                  }}
+                >
+                  <Avatar className="avatar" src={switchAccountImage || ""}>
+                    {switchAccountImage ? "" : switchAccountName?.toUpperCase()}
+                  </Avatar>{" "}
+                  {switchAccountFirstName || ""} {switchAccountLastName || ""}
+                </MenuItem>
+              );
+            })}
+          </>
+        ) : (
+          <></>
+        )}
         <Divider />
-        <MenuItem onClick={() => handleNavigate(REGISTER)}>
-          <ListItemIcon>
-            <PersonAdd fontSize="small" />
-          </ListItemIcon>
-          Add another account
-        </MenuItem>
-        <MenuItem onClick={() => handleNavigate(SETTINGS)}>
+        <MenuItem onClick={() => handleNavigate(PROFILE)}>
           <ListItemIcon>
             <Settings fontSize="small" />
           </ListItemIcon>

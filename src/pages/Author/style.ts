@@ -6,7 +6,6 @@ const { yellow, background, white } = colors;
 export const HomePageStyles = styled.div`
   .search-bar-container {
     width: 100%;
-    height: 50vh;
     display: flex;
     align-items: end;
 
@@ -33,25 +32,33 @@ export const HomePageStyles = styled.div`
           background-color: rgba(64, 64, 64, 1);
           border-radius: ${pxToRem(15)};
           max-width: ${pxToRem(750)};
+
           &::placeholder {
             font-size: ${pxToRem(24)};
           }
         }
+
+        input {
+          outline: none;
+          color: ${yellow};
+          border: none;
+        }
+        fieldset {
+          border-color: ${yellow};
+        }
+
+        label {
+          color: ${yellow};
+        }
+
         .search-button {
           width: ${pxToRem(180)};
           height: ${pxToRem(56)};
-          background-color: ${yellow};
-          text-transform: capitalize;
-
-          &:hover {
-            background-color: ${yellow};
-          }
-
+          text-transform: uppercase;
           color: rgba(60, 39, 16, 1);
-          border-radius: ${pxToRem(15)};
           font-size: ${pxToRem(18)};
           display: flex;
-          gap: ${pxToRem(5)};
+          gap: ${pxToRem(7)};
 
           .search-icon {
             font-size: ${pxToRem(24)};
@@ -68,10 +75,10 @@ export const HomePageStyles = styled.div`
       padding: ${pxToRem(20)} ${pxToRem(0)};
 
       .create-book {
+        max-width: ${pxToRem(180)} !important;
+        height: ${pxToRem(56)};
         position: absolute;
         right: 0;
-        padding: ${pxToRem(12)} ${pxToRem(36)};
-        background-color: ${yellow};
       }
     }
   }

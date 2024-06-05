@@ -22,6 +22,7 @@ import { IUserData } from "../../../interfaces";
 import { toast } from "react-toastify";
 import paths from "../../../constants/paths";
 import { useNavigate } from "react-router-dom";
+import ButtonComponent from "../../../components/Button";
 const { USER } = paths;
 
 function Profile() {
@@ -66,6 +67,10 @@ function Profile() {
 
   const handleFinish = async (data: FieldValues | any) => {
     mutate(data);
+  };
+
+  const handleCancel = () => {
+    navigate(USER);
   };
 
   return (
@@ -191,9 +196,21 @@ function Profile() {
             />
           </Box>
           <Box className="save-changes-button">
-            <Button variant="contained" fullWidth type="submit">
+            <ButtonComponent
+              variant="outlined"
+              type="button"
+              onClick={handleCancel}
+              isDisabled={false}
+            >
+              Cancel
+            </ButtonComponent>
+            <ButtonComponent
+              variant="contained"
+              type="submit"
+              isDisabled={false}
+            >
               Save Changes
-            </Button>
+            </ButtonComponent>
           </Box>
         </form>
       </Box>

@@ -23,16 +23,14 @@ import paths from "../../../constants/paths";
 import NoData from "../../../components/NoData";
 import { toast } from "react-toastify";
 const { yellow } = colors;
-const { baseUrl, booksApi, shelfApi, authorBooksApi, myBooksApi } = api;
+const { baseUrl, booksApi, shelfApi, myBooksApi } = api;
 const { BOOKS, USER } = paths;
 
 function BookDetails() {
   const bookId = useSelector((state: any) => state.book?.bookId);
-  const authorId = useSelector((state: any) => state.book?.authorId);
   const token = useSelector((state: any) => state.auth.token);
   const navigate = useNavigate();
   const [detailBookData, setDetailBookData] = React.useState({});
-  const [newBookData, setNewBookData] = React.useState<any>([]);
   const bookApiUrl = baseUrl + booksApi;
   const userShelfApiUrl = baseUrl + shelfApi;
   const userBooksApiUrl = baseUrl + myBooksApi;
@@ -62,7 +60,10 @@ function BookDetails() {
 
   React.useEffect(() => {
     const array: any[] = [];
-    const newArray = array.concat(bookData?.payload?.docs, userBooks?.payload?.docs);
+    const newArray = array.concat(
+      bookData?.payload?.docs,
+      userBooks?.payload?.docs
+    );
     console.log(newArray);
     newArray?.filter((book: IBookData) => {
       if (book?._id === bookId) {

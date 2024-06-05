@@ -1,17 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { CreateBookStyle } from "../style";
-import {
-  Box,
-  Button,
-  FormControl,
-  TextField,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
-import { DefaultBookImage } from "../../../assets";
+import { Box, Typography, useMediaQuery } from "@mui/material";
+import { UploadImage } from "../../../assets";
 import { pxToRem } from "../../../utils";
 import paths from "../../../constants/paths";
-import { Controller, FieldValues, useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import { IBookData } from "../../../interfaces";
 import { api } from "../../../utils/api";
@@ -20,8 +13,68 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import RoleSelect from "../../../components/Select";
+import ButtonComponent from "../../../components/Button";
+import ControllerComponent from "../../../components/Controller";
 const { BOOKS } = paths;
-const { baseUrl, filesApi, booksApi } = api;
+const { baseUrl, booksApi } = api;
+
+const inputDatas: {
+  name: string;
+  errorText: string;
+  required: boolean;
+  label: string;
+  type: string;
+}[] = [
+  {
+    name: "title",
+    errorText: "Please enter book title!",
+    required: true,
+    label: "Title",
+    type: "text",
+  },
+  {
+    name: "pages",
+    errorText: "Please enter book pages!",
+    required: false,
+    label: "Pages",
+    type: "number",
+  },
+  {
+    name: "year",
+    errorText: "Please enter book year!",
+    required: false,
+    label: "Year",
+    type: "number",
+  },
+  {
+    name: "price",
+    errorText: "Please enter book price!",
+    required: false,
+    label: "Price",
+    type: "number",
+  },
+  {
+    name: "country",
+    errorText: "Please enter book country!",
+    required: false,
+    label: "Country",
+    type: "text",
+  },
+  {
+    name: "rate",
+    errorText: "Please enter book rate!",
+    required: false,
+    label: "Rate",
+    type: "number",
+  },
+  {
+    name: "description",
+    errorText: "Please enter book description!",
+    required: false,
+    label: "Description",
+    type: "text",
+  },
+];
 
 const roles = [
   { role: "classic", value: "Classic" },
@@ -33,10 +86,9 @@ function CreateBook() {
   const matches = useMediaQuery(`(min-width: ${pxToRem(956)})`);
   const token = useSelector((state: any) => state.auth.token);
   const apiUrl = baseUrl + booksApi;
-  const uploadApiUrl = baseUrl + filesApi;
   const navigate = useNavigate();
   const uploadRef = React.useRef<HTMLInputElement | null>(null);
-  const [file, setFile] = React.useState<File | null>(null);
+  const [selectImage, setSelectImage] = React.useState<string | null>("");
 
   const {
     handleSubmit,
@@ -45,9 +97,11 @@ function CreateBook() {
   } = useForm();
 
   const { mutate } = useMutation({
-    mutationFn: (bookData: IBookData) =>
-      axios.post(apiUrl, bookData, {
-        headers: { Authorization: `Bearer ${token}` },
+    mutationFn: async (bookData: IBookData) =>
+      await axios.post(apiUrl, bookData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }),
     onSuccess: (data) => {
       console.log(data?.data);
@@ -61,45 +115,52 @@ function CreateBook() {
       }
     },
   });
-  const { mutate: uploadMutation } = useMutation({
-    mutationFn: (fileData: IBookData) =>
-      axios.post(uploadApiUrl, fileData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }),
-    onSuccess: (data) => {
-      console.log(data?.data);
-    },
-    onError: (err: any) => {
-      console.log(err?.response?.data);
-    },
-  });
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = e.target.files;
+    if (selectedFiles?.[0]) {
+      setSelectImage(URL.createObjectURL(selectedFiles?.[0]));
+    }
+  };
 
   const handleFinish = async (bookData: FieldValues | any) => {
-    mutate(bookData);
+    const { category, country, description, pages, price, rate, title, year } =
+      bookData;
+    const postBook = {
+      category,
+      country,
+      description,
+      pages,
+      price,
+      rate,
+      title,
+      year,
+      // language: selectImage,
+    };
+    console.log(postBook, "postBook");
+    console.log(typeof selectImage, "select image type");
+    mutate(postBook);
   };
 
   const handleUploadClick = () => {
     uploadRef.current?.click();
   };
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) {
-      setFile(e.target.files[0]);
-      console.log(e.target.files[0]);
-    }
+
+  const handleCancel = async () => {
+    navigate(BOOKS);
   };
-  const handleUpload = async () => {
-    const fileData: any = { oldImg: file || null };
-    uploadMutation(fileData);
-  };
+
+  useEffect(() => {
+    console.log(selectImage, "select image");
+  }, [selectImage]);
 
   return (
     <CreateBookStyle>
-      <Box
+      <form
         className={
           matches ? "create-book-container" : "create-book-container column"
         }
+        onSubmit={handleSubmit(handleFinish)}
       >
         <Box
           className={
@@ -107,163 +168,51 @@ function CreateBook() {
           }
         >
           <Box className="image-container">
-            <img src={DefaultBookImage} alt="create book" />
+            <img
+              src={selectImage || UploadImage}
+              alt="create book"
+              onClick={handleUploadClick}
+            />
             <input
               type="file"
               ref={uploadRef}
               onChange={handleFileChange}
               style={{ display: "none" }}
+              name="image"
             />
-            <Button
+            <ButtonComponent
               variant="contained"
-              fullWidth
-              className="create-button"
+              type="button"
               onClick={handleUploadClick}
             >
-              Upload cover
-            </Button>
-            <Button
-              variant="contained"
-              fullWidth
-              className="create-button"
-              onClick={handleUpload}
-            >
               Upload
-            </Button>
+            </ButtonComponent>
           </Box>
         </Box>
         <Box
           className={matches ? "form-container w-50" : "form-container w-100"}
         >
-          <form onSubmit={handleSubmit(handleFinish)}>
+          <Box className="input-wrapper">
             <Typography className="form-title">Add book</Typography>
-            <Controller
-              name="title"
-              rules={{
-                required: true,
-              }}
-              control={control}
-              render={({ field }) => {
+            {inputDatas?.map(
+              (
+                { name = "", errorText = "", required = false, label, type },
+                i
+              ) => {
                 return (
-                  <FormControl fullWidth>
-                    <TextField
-                      label={"Title"}
-                      {...field}
-                      error={!!errors[field.name]}
-                      helperText={
-                        !!errors[field.name] && "Please enter book title!"
-                      }
-                    />
-                  </FormControl>
+                  <ControllerComponent
+                    name={name}
+                    required={required}
+                    control={control}
+                    errorText={errorText}
+                    errors={errors}
+                    key={i}
+                    label={label}
+                    type={type}
+                  />
                 );
-              }}
-            />
-            <Controller
-              name="pages"
-              rules={{
-                required: false,
-              }}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <FormControl fullWidth>
-                    <TextField
-                      label={"Pages"}
-                      {...field}
-                      error={!!errors[field.name]}
-                      helperText={
-                        !!errors[field.name] && "Please enter book pages!"
-                      }
-                    />
-                  </FormControl>
-                );
-              }}
-            />
-            <Controller
-              name="year"
-              rules={{
-                required: false,
-              }}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <FormControl fullWidth>
-                    <TextField
-                      label={"Year"}
-                      {...field}
-                      error={!!errors[field.name]}
-                      helperText={
-                        !!errors[field.name] && "Please enter book year!"
-                      }
-                    />
-                  </FormControl>
-                );
-              }}
-            />
-            <Controller
-              name="price"
-              rules={{
-                required: false,
-              }}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <FormControl fullWidth>
-                    <TextField
-                      label={"Price"}
-                      {...field}
-                      error={!!errors[field.name]}
-                      helperText={
-                        !!errors[field.name] && "Please enter book price!"
-                      }
-                    />
-                  </FormControl>
-                );
-              }}
-            />
-            <Controller
-              name="country"
-              rules={{
-                required: false,
-              }}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <FormControl fullWidth>
-                    <TextField
-                      label={"Country"}
-                      {...field}
-                      error={!!errors[field.name]}
-                      helperText={
-                        !!errors[field.name] && "Please enter book country!"
-                      }
-                    />
-                  </FormControl>
-                );
-              }}
-            />
-            <Controller
-              name="rate"
-              rules={{
-                required: false,
-              }}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <FormControl fullWidth>
-                    <TextField
-                      label={"Rate"}
-                      {...field}
-                      type="number"
-                      error={!!errors[field.name]}
-                      helperText={
-                        !!errors[field.name] && "Please enter book rate!"
-                      }
-                    />
-                  </FormControl>
-                );
-              }}
-            />
+              }
+            )}
             <RoleSelect
               control={control}
               errors={errors}
@@ -271,40 +220,21 @@ function CreateBook() {
               name="category"
               label="Category"
             />
-            <Controller
-              name="description"
-              rules={{
-                required: false,
-              }}
-              control={control}
-              render={({ field }) => {
-                return (
-                  <FormControl fullWidth>
-                    <TextField
-                      label={"Description"}
-                      {...field}
-                      error={!!errors[field.name]}
-                      helperText={
-                        !!errors[field.name] && "Please enter book description!"
-                      }
-                    />
-                  </FormControl>
-                );
-              }}
-            />
-            <Box>
-              <Button
-                variant="contained"
-                fullWidth
-                type="submit"
-                className="create-button"
-              >
+            <Box className="button-wrapper">
+              <ButtonComponent variant="contained" type="submit">
                 Create
-              </Button>
+              </ButtonComponent>
+              <ButtonComponent
+                variant="outlined"
+                type="button"
+                onClick={handleCancel}
+              >
+                Cancel
+              </ButtonComponent>
             </Box>
-          </form>
+          </Box>
         </Box>
-      </Box>
+      </form>
     </CreateBookStyle>
   );
 }

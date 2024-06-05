@@ -10,15 +10,13 @@ import SearchBar from "../components/searchBar";
 import { HomePageStyles } from "./style";
 import Header from "../../components/Header";
 import { api } from "../../utils/api";
-import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import NoData from "../../components/NoData";
-import { getDataWithToken } from "../../utils";
+import { FieldValues, useForm } from "react-hook-form";
+import axios from "axios";
 const { baseUrl, authorsApi } = api;
 
 function Author() {
-  const [inputChange, setInputChange] = React.useState("");
-  const token = useSelector((state: any) => state.auth.token);
   const [authorData, setAuthorData] = React.useState([]);
   const authorsApiUrl = baseUrl + authorsApi;
   const {
@@ -28,22 +26,34 @@ function Author() {
     refetch,
   } = useQuery({
     queryKey: ["authors"],
-    queryFn: () => getDataWithToken(authorsApiUrl, token),
+    queryFn: async () => {
+      const response = await axios.get(authorsApiUrl);
+      return response?.data;
+    },
   });
 
-  const handleSearch = () => {
-    const filterData = getAuthorData?.payload?.filter((author: IAuthorData) =>
-      author.firstName
-        ?.toLocaleLowerCase()
-        .includes(inputChange?.toLocaleLowerCase())
-    );
-    setAuthorData(filterData);
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
+
+  const handleSearch = async (data: FieldValues | any) => {
+    if (data?.search) {
+      const filterData = getAuthorData?.payload?.filter((author: IAuthorData) =>
+        author.firstName
+          ?.toLocaleLowerCase()
+          .includes(data?.search?.toLocaleLowerCase()?.trim())
+      );
+      setAuthorData(filterData);
+    } else {
+      setAuthorData(getAuthorData?.payload);
+    }
   };
 
   React.useEffect(() => {
     refetch();
     setAuthorData(getAuthorData?.payload);
-    setInputChange("");
   }, [isLoading, isSuccess]);
 
   return (
@@ -54,14 +64,14 @@ function Author() {
           <HomePageStyles>
             <Box className="search-bar-container">
               <SearchBar
-                onChange={setInputChange}
-                value={inputChange}
-                onClick={handleSearch}
+                onClick={handleSubmit(handleSearch)}
+                control={control}
+                errors={errors}
               />
             </Box>
             <Box className="home-page-container">
               <Box className="home-page-tabs">
-                {getAuthorData?.payload?.length !== 0 ? (
+                {authorData?.length !== 0 ? (
                   <Box>
                     {isLoading ? (
                       <NoData />
