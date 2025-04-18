@@ -1,6 +1,6 @@
 # Bookzone
 
-A modern online book store built with React, React Query, TypeScript, and Redux. Bookzone allows users to search for books, view detailed information, and make purchases. It also includes an admin panel for book management and order tracking.
+A modern online book store built with React, React Query, TypeScript, and Redux. Bookzone allows users to search for books, view detailed information, and make purchases. It also includes a landing pages for book management.
 
 ![Books page](https://github.com/Farruxbekdev07/bookzone/blob/main/src/assets/screenshots/books.jpg?raw=true)
 ![Book detail page](https://github.com/Farruxbekdev07/bookzone/blob/main/src/assets/screenshots/book_detail.jpg?raw=true)
@@ -18,7 +18,7 @@ A modern online book store built with React, React Query, TypeScript, and Redux.
 ## ⚙️ Features
 
 - User authentication and book browsing
-- Search functionality for books by title, author, and genre
+- Search functionality for books by title, author
 - Detailed book information page
 - Admin panel for managing books and orders
 - Role-based routing: admin, user
@@ -30,7 +30,6 @@ A modern online book store built with React, React Query, TypeScript, and Redux.
 - Implemented book search and filtering functionality
 - Developed the user authentication system
 - Integrated React Query for data fetching and caching
-- Designed the admin panel for managing books and orders
 
 ## 🔗 Live Demo
 
