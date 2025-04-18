@@ -32,6 +32,12 @@ A modern online book store built with React, React Query, TypeScript, and Redux.
 - Integrated React Query for data fetching and caching
 - Designed the admin panel for managing books and orders
 
+## 🔗 Live Demo
+
+[Bookzone Live](https://land-of-books.netlify.app/)
+
+> ⚠️ Note: The backend server is currently not running, so some dynamic features (like login and data fetching) may not work in the live demo.
+
 ## 🚀 Run Locally
 
 ```bash
