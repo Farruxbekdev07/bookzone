@@ -14,6 +14,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { AccountStyles } from "../Profile/style";
 import { useNavigate } from "react-router-dom";
 import paths from "../../../constants/paths";
+import ButtonComponent from "../../../components/Button";
 const { USER } = paths;
 
 const currencies = [
@@ -35,7 +36,7 @@ function Settings() {
 
   const { handleSubmit } = useForm();
 
-  const handleFinish = async (data: FieldValues) => {
+  const handleFinish = async () => {
     navigate(USER);
   };
 
@@ -72,9 +73,16 @@ function Settings() {
             />
           </Box>
           <Box className="save-changes-button">
-            <Button variant="contained" fullWidth type="submit">
+            <ButtonComponent
+              variant="outlined"
+              type="button"
+              onClick={() => navigate(USER)}
+            >
+              Cancel
+            </ButtonComponent>
+            <ButtonComponent variant="contained" type="submit">
               Save Changes
-            </Button>
+            </ButtonComponent>
           </Box>
         </form>
       </Box>

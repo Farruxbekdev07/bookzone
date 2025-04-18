@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React from "react";
 import {
@@ -56,7 +57,7 @@ function Security() {
   React.useEffect(() => {
     getUserDataRefetch();
   }, [getUserLoading, getUserError]);
-
+  
   const {
     handleSubmit,
     control,
@@ -64,7 +65,8 @@ function Security() {
   } = useForm();
 
   const handleFinish = async (data: FieldValues | any) => {
-    mutate(data);
+    // mutate(data);
+    navigate(USER);
   };
 
   return (
@@ -82,7 +84,7 @@ function Security() {
             <Controller
               name="email"
               rules={{
-                required: true,
+                required: false,
               }}
               control={control}
               defaultValue={email || ""}
@@ -104,12 +106,12 @@ function Security() {
               }}
             />
           </Box>
-          <Box className="input-wrapper">
+          {/* <Box className="input-wrapper">
             <Typography className="input-label">Current password</Typography>
             <Controller
               name="current-password"
               rules={{
-                required: true,
+                required: false,
               }}
               control={control}
               render={({ field }) => {
@@ -130,13 +132,13 @@ function Security() {
                 );
               }}
             />
-          </Box>
+          </Box> */}
           <Box className="input-wrapper">
             <Typography className="input-label">New password</Typography>
             <Controller
               name="new-password"
               rules={{
-                required: true,
+                required: false,
               }}
               control={control}
               render={({ field }) => {
@@ -163,7 +165,7 @@ function Security() {
             <Controller
               name="confirm-password"
               rules={{
-                required: true,
+                required: false,
               }}
               control={control}
               render={({ field }) => {

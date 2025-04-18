@@ -1,46 +1,37 @@
-# Getting Started with Create React App
+# Bookzone
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A modern online book store built with React, React Query, TypeScript, and Redux. Bookzone allows users to search for books, view detailed information, and make purchases. It also includes an admin panel for book management and order tracking.
 
-## Available Scripts
+![Books page](assets/screenshots/books.jpg)
 
-In the project directory, you can run:
+## 🔧 Tech Stack
 
-### `npm start`
+- **Frontend**: React, TypeScript, Redux Toolkit, React Query
+- **Styling**: SCSS, MUI (Material UI)
+- **State Management**: Redux Toolkit
+- **Data Handling**: React Query
+- **Others**: React Router
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+## ⚙️ Features
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+- User authentication and book browsing
+- Search functionality for books by title, author, and genre
+- Detailed book information page
+- Admin panel for managing books and orders
+- Role-based routing: admin, user
+- Responsive design for mobile and desktop
 
-### `npm test`
+## 💻 My Contribution
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+- Built the entire frontend architecture using React and Redux
+- Implemented book search and filtering functionality
+- Developed the user authentication system
+- Integrated React Query for data fetching and caching
+- Designed the admin panel for managing books and orders
 
-### `npm run build`
+## 🚀 Run Locally
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+```bash
+npm install
+npm start
+```

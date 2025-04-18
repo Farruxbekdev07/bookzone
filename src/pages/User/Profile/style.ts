@@ -61,14 +61,9 @@ export const AccountStyles = styled.div`
       .save-changes-button {
         display: flex;
         align-items: end;
+        gap: ${pxToRem(10)};
         justify-content: end;
         height: ${pxToRem(100)};
-
-        button {
-          width: ${pxToRem(150)};
-          height: ${pxToRem(45)};
-          background-color: ${darkBlue};
-        }
       }
       .form-title {
         font-size: ${pxToRem(18)};
@@ -78,5 +73,9 @@ export const AccountStyles = styled.div`
   }
   .column {
     flex-direction: column;
+  }
+  .back {
+    display: flex;
+    gap: 5px;
   }
 `;

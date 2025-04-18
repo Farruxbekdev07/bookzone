@@ -171,6 +171,7 @@ export const CreateBookStyle = styled.div`
       align-items: center;
 
       .image-container {
+        max-width: ${pxToRem(500)};
         min-width: ${pxToRem(300)};
         display: flex;
         flex-direction: column;
@@ -184,12 +185,28 @@ export const CreateBookStyle = styled.div`
         .file {
           display: none;
         }
+        img {
+          border: 1px solid red;
+          box-shadow: 0px 5px 10px gray;
+          cursor: pointer;
+          object-fit: contain;
+        }
       }
     }
-    .create-button {
-      min-width: ${pxToRem(300)};
-      background-color: ${darkBlue};
-      height: ${pxToRem(46)};
+    .button-wrapper {
+      display: flex;
+      flex-direction: column;
+      gap: ${pxToRem(20)};
+
+      .create-button {
+        min-width: ${pxToRem(300)};
+        background-color: ${darkBlue};
+        height: ${pxToRem(46)};
+      }
+      .cancel-button {
+        min-width: ${pxToRem(300)};
+        height: ${pxToRem(46)};
+      }
     }
     .form-container {
       display: flex;
@@ -202,7 +219,7 @@ export const CreateBookStyle = styled.div`
         font-weight: 900;
         color: ${black};
       }
-      form {
+      form, .input-wrapper {
         width: ${pxToRem(500)};
         display: flex;
         flex-direction: column;

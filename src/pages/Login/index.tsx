@@ -1,13 +1,6 @@
 import React from "react";
-import {
-  Box,
-  Button,
-  FormControl,
-  TextField,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
-import { useForm, Controller, FieldValues } from "react-hook-form";
+import { Box, Button, Typography, useMediaQuery } from "@mui/material";
+import { useForm, FieldValues } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import paths from "../../constants/paths";
 import { postData, pxToRem } from "../../utils";
@@ -16,13 +9,39 @@ import { SignInImage } from "../../assets";
 import { useMutation } from "@tanstack/react-query";
 import { IUserData } from "../../interfaces";
 import { api } from "../../utils/api";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../store/slices/AuthSlice";
 import { toast } from "react-toastify";
+import ControllerComponent from "../../components/Controller";
+import { setAccounts } from "../../store/slices/AccountSlice";
+
+const inputDates: {
+  name: string;
+  errorText: string;
+  required: boolean;
+  type: string;
+  label: string;
+}[] = [
+  {
+    name: "email",
+    errorText: "Please enter your email!",
+    required: true,
+    type: "email",
+    label: "Email",
+  },
+  {
+    name: "password",
+    errorText: "Please enter your password!",
+    required: true,
+    type: "password",
+    label: "Password",
+  },
+];
 
 function SignIn() {
   const { baseUrl, loginApi } = api;
   const matches = useMediaQuery(`(min-width: ${pxToRem(1000)})`);
+  const accounts = useSelector((state: any) => state.accounts.accounts);
   const { USER } = paths;
   const { REGISTER } = paths;
   const dispatch = useDispatch();
@@ -44,6 +63,14 @@ function SignIn() {
       dispatch(login(data));
       toast.success("Successfully completed");
       navigate(USER);
+
+      const userExists = accounts.some(
+        (user: any) => user._id === data?.user?._id
+      );
+
+      if (!userExists) {
+        dispatch(setAccounts(data));
+      }
     },
   });
 
@@ -82,49 +109,22 @@ function SignIn() {
               </Typography>
             </Box>
             <form onSubmit={handleSubmit(handleFinish)}>
-              <Controller
-                name="email"
-                rules={{
-                  required: true,
-                }}
-                control={control}
-                render={({ field }) => {
+              {inputDates?.map(
+                ({ name, required, errorText, type, label }, i) => {
                   return (
-                    <FormControl fullWidth>
-                      <TextField
-                        label={"Email"}
-                        {...field}
-                        error={!!errors[field.name]}
-                        helperText={
-                          !!errors[field.name] && "Please enter your email!"
-                        }
-                      />
-                    </FormControl>
+                    <ControllerComponent
+                      name={name}
+                      errorText={errorText}
+                      errors={errors}
+                      key={i}
+                      required={required}
+                      type={type}
+                      control={control}
+                      label={label}
+                    />
                   );
-                }}
-              />
-              <Controller
-                name="password"
-                rules={{
-                  required: true,
-                }}
-                control={control}
-                render={({ field }) => {
-                  return (
-                    <FormControl fullWidth>
-                      <TextField
-                        label={"Password"}
-                        type="password"
-                        {...field}
-                        error={!!errors[field.name]}
-                        helperText={
-                          !!errors[field.name] && "Please enter your password!"
-                        }
-                      />
-                    </FormControl>
-                  );
-                }}
-              />
+                }
+              )}
               <Box>
                 <Button variant="contained" fullWidth type="submit">
                   Log In

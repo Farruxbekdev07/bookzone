@@ -1,9 +1,11 @@
+/* eslint-disable no-useless-concat */
 /* eslint-disable array-callback-return */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useEffect } from "react";
+import React from "react";
 import {
   Avatar,
   Box,
+  Pagination,
   Skeleton,
   Typography,
   useMediaQuery,
@@ -81,38 +83,32 @@ const monthData: IMonthsData[] = [
 function Home() {
   const matches = useMediaQuery(`(max-width: ${pxToRem(850)})`);
   const token = useSelector((state: any) => state.auth.token);
+  const [page, setPage] = React.useState<number | any>(1);
+  const [bookData, setBookData] = React.useState([]);
+  const [shelfData, setShelfData] = React.useState([]);
   const { baseUrl, usersApi, myBooksApi } = api;
   const usersApiUrl = baseUrl + usersApi;
-  const booksApiUrl = baseUrl + myBooksApi;
+  const myBooksApiUrl =
+    baseUrl + myBooksApi + `?page=${page}` + `&pageSize=${100}`;
   const [value, setValue] = React.useState(0);
-  const { data: getBookData } = useQuery({
-    queryKey: ["my-books"],
-    queryFn: () => getDataWithToken(booksApiUrl, token),
-  });
+
   const {
-    data: getUserData,
-    isLoading: getUserLoading,
-    isError: getUserError,
+    data: getBookData,
+    isLoading,
+    isError,
   } = useQuery({
+    queryKey: ["my-books"],
+    queryFn: () => getDataWithToken(myBooksApiUrl, token),
+  });
+
+  const { data: getUserData, isLoading: getUserLoading } = useQuery({
     queryKey: ["users"],
     queryFn: () => getUsers(usersApiUrl, token),
   });
 
-  const userTabData: ITabsData[] = [
-    {
-      index: 0,
-      label: "My Books",
-      data: getBookData?.payload?.docs,
-    },
-    {
-      index: 1,
-      label: "Shelf",
-      data: getUserData?.data?.user?.shelf,
-    },
-  ];
-
   const { user } = getUserData?.data || {};
-  const { firstName, lastName, date_of_birth, image, shelf }: any = user || {};
+  const { firstName, lastName, date_of_birth, image, role, phone, email }: any =
+    user || {};
   const date = new Date(date_of_birth);
   const getMonth = date.getMonth();
   const year = date.getFullYear();
@@ -123,11 +119,32 @@ function Home() {
   )[0];
   const { month } = monthFilter || {};
 
-  useEffect(() => {
-    console.log(user);
-    console.log(shelf);
-    console.log(getBookData);
-  }, [getUserLoading, getUserError]);
+  React.useEffect(() => {
+    setBookData(getBookData?.payload?.docs);
+    setShelfData(getUserData?.data?.user?.shelf);
+    console.log(getBookData?.payload?.docs);
+  }, [isError, isLoading, getUserLoading, page]);
+
+  const userTabData: ITabsData[] = [
+    {
+      index: 0,
+      label: "My Books",
+      data: bookData,
+    },
+    {
+      index: 1,
+      label: "Shelf",
+      data: shelfData,
+    },
+  ];
+
+  const userShelfTab: ITabsData[] = [
+    {
+      index: 0,
+      label: "Shelf",
+      data: shelfData,
+    },
+  ];
 
   return (
     <>
@@ -204,14 +221,21 @@ function Home() {
                         Tavallud:
                         <Typography className="text opacity-60 text-22">
                           {" "}
-                          {month || ""} {day || ""}, {year || ""}
+                          {day || ""}-{month || ""} , {year || ""}-yil
                         </Typography>
                       </Typography>
                       <Typography className="text text-white flex gap-10 mt-10 text-22">
-                        Manzili:
+                        Telefon Raqam:
                         <Typography className="text opacity-60 text-22">
                           {" "}
-                          Jizzax
+                          {phone || ""}
+                        </Typography>
+                      </Typography>
+                      <Typography className="text text-white flex gap-10 mt-10 text-22">
+                        Email:
+                        <Typography className="text opacity-60 text-22">
+                          {" "}
+                          {email || ""}
                         </Typography>
                       </Typography>
                     </>
@@ -221,36 +245,70 @@ function Home() {
             </Box>
             <Box className="user-main">
               <Box className="user-main-tabs">
-                <CustomTabs
-                  value={value}
-                  setValue={setValue}
-                  data={userTabData}
-                />
-                {getBookData ? (
+                {role === "author" ? (
+                  <CustomTabs
+                    value={value}
+                    setValue={setValue}
+                    data={userTabData}
+                  />
+                ) : (
+                  <CustomTabs
+                    value={value}
+                    setValue={setValue}
+                    data={userShelfTab}
+                  />
+                )}
+                {bookData ? (
                   <Box>
-                    {userTabData?.map((item: ITabsData) => {
-                      const { index, data } = item;
-                      if (value === index) {
-                        if (data?.length !== 0) {
-                          return (
-                            <CustomTabPanel value={value} index={index}>
-                              <Box className="card-container">
-                                {data?.map((item: IBookData) => {
-                                  return <CustomBookCard data={item} />;
-                                })}
-                              </Box>
-                            </CustomTabPanel>
-                          );
-                        }
-                        return <NoData />;
-                      }
-                    })}
+                    {role === "author"
+                      ? userTabData?.map((item: ITabsData) => {
+                          const { index, data } = item;
+                          if (value === index) {
+                            if (data?.length !== 0) {
+                              return (
+                                <CustomTabPanel value={value} index={index}>
+                                  <Box className="card-container">
+                                    {data?.map((item: IBookData) => {
+                                      return <CustomBookCard data={item} />;
+                                    })}
+                                  </Box>
+                                </CustomTabPanel>
+                              );
+                            }
+                            return <NoData />;
+                          }
+                        })
+                      : userShelfTab?.map((item: ITabsData) => {
+                          const { index, data } = item;
+                          if (value === index) {
+                            if (data?.length !== 0) {
+                              return (
+                                <CustomTabPanel value={value} index={index}>
+                                  <Box className="card-container">
+                                    {data?.map((item: IBookData) => {
+                                      return <CustomBookCard data={item} />;
+                                    })}
+                                  </Box>
+                                </CustomTabPanel>
+                              );
+                            }
+                            return <NoData />;
+                          }
+                        })}
                   </Box>
                 ) : (
                   <NoData />
                 )}
               </Box>
             </Box>
+            <Pagination
+              // Math.ceil(bookData?.length)
+              count={Math.ceil(160 / 8)}
+              page={page}
+              onChange={(_, currentPage) => setPage(currentPage)}
+              sx={{ color: "white" }}
+              defaultPage={1}
+            />
           </UserInfoStyles>
         </StyledComponent>
       </Container>

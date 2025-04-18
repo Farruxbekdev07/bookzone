@@ -1,13 +1,6 @@
 import React from "react";
-import {
-  Box,
-  Button,
-  FormControl,
-  TextField,
-  Typography,
-  useMediaQuery,
-} from "@mui/material";
-import { useForm, Controller, FieldValues } from "react-hook-form";
+import { Box, Button, Typography, useMediaQuery } from "@mui/material";
+import { useForm, FieldValues } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import paths from "../../constants/paths";
 import { postData, pxToRem } from "../../utils";
@@ -17,10 +10,63 @@ import { useMutation } from "@tanstack/react-query";
 import { api } from "../../utils/api";
 import RoleSelect from "../../components/Select";
 import { IUserData } from "../../interfaces";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { login } from "../../store/slices/AuthSlice";
 import { toast } from "react-toastify";
+import ControllerComponent from "../../components/Controller";
+import { setAccounts } from "../../store/slices/AccountSlice";
 const { baseUrl, registerApi } = api;
+
+const inputDates: {
+  name: string;
+  errorText: string;
+  required: boolean;
+  type: string;
+  label: string;
+}[] = [
+  {
+    errorText: "Please enter your first name!",
+    name: "firstName",
+    required: true,
+    type: "text",
+    label: "First name",
+  },
+  {
+    errorText: "Please enter your last name!",
+    name: "lastName",
+    required: false,
+    type: "text",
+    label: "Last name",
+  },
+  {
+    errorText: "Please enter your phone!",
+    name: "phone",
+    required: false,
+    type: "tel",
+    label: "Phone",
+  },
+  {
+    errorText: "Please enter your email!",
+    name: "email",
+    required: true,
+    type: "email",
+    label: "Email",
+  },
+  {
+    errorText: "Please enter your password!",
+    name: "password",
+    required: true,
+    type: "password",
+    label: "Password",
+  },
+  {
+    errorText: "Please enter your date of birth!",
+    name: "date_of_birth",
+    required: false,
+    type: "date",
+    label: "",
+  },
+];
 
 const roles = [
   { role: "author", value: "Author" },
@@ -29,6 +75,7 @@ const roles = [
 
 function SignUp() {
   const matches = useMediaQuery(`(min-width: ${pxToRem(956)})`);
+  const accounts = useSelector((state: any) => state.accounts.accounts);
   const { LOG_IN, USER } = paths;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -49,6 +96,14 @@ function SignUp() {
       dispatch(login(data));
       navigate(USER);
       toast.success("Successfully completed");
+
+      const userExists = accounts.some(
+        (user: any) => user._id === data?.user?._id
+      );
+
+      if (!userExists) {
+        dispatch(setAccounts(data?.user));
+      }
     },
   });
 
@@ -87,158 +142,22 @@ function SignUp() {
               </Typography>
             </Box>
             <form onSubmit={handleSubmit(onSubmit)}>
-              <Controller
-                name="firstName"
-                rules={{
-                  required: true,
-                }}
-                control={control}
-                render={({ field }) => {
+              {inputDates?.map(
+                ({ name, errorText, required, type, label }, i) => {
                   return (
-                    <FormControl fullWidth>
-                      <TextField
-                        label={"First name"}
-                        {...field}
-                        error={!!errors[field.name]}
-                        helperText={
-                          !!errors[field.name] &&
-                          "Please enter your first name!"
-                        }
-                      />
-                    </FormControl>
+                    <ControllerComponent
+                      control={control}
+                      errorText={errorText}
+                      errors={errors}
+                      key={i}
+                      name={name}
+                      required={required}
+                      type={type}
+                      label={label}
+                    />
                   );
-                }}
-              />
-              <Controller
-                name="lastName"
-                rules={{
-                  required: true,
-                }}
-                control={control}
-                render={({ field }) => {
-                  return (
-                    <FormControl fullWidth>
-                      <TextField
-                        label={"Last name"}
-                        {...field}
-                        error={!!errors[field.name]}
-                        helperText={
-                          !!errors[field.name] && "Please enter your last name!"
-                        }
-                      />
-                    </FormControl>
-                  );
-                }}
-              />
-              <Controller
-                name="phone"
-                rules={{
-                  required: true,
-                }}
-                control={control}
-                render={({ field }) => {
-                  return (
-                    <FormControl fullWidth>
-                      <TextField
-                        type="tel"
-                        label={"Phone"}
-                        {...field}
-                        error={!!errors[field.name]}
-                        helperText={
-                          !!errors[field.name] && "Please enter your phone!"
-                        }
-                      />
-                    </FormControl>
-                  );
-                }}
-              />
-              <Controller
-                name="email"
-                rules={{
-                  required: true,
-                }}
-                control={control}
-                render={({ field }) => {
-                  return (
-                    <FormControl fullWidth>
-                      <TextField
-                        label={"Email"}
-                        {...field}
-                        error={!!errors[field.name]}
-                        helperText={
-                          !!errors[field.name] && "Please enter your email!"
-                        }
-                      />
-                    </FormControl>
-                  );
-                }}
-              />
-              <Controller
-                name="password"
-                rules={{
-                  required: true,
-                }}
-                control={control}
-                render={({ field }) => {
-                  return (
-                    <FormControl fullWidth>
-                      <TextField
-                        type="password"
-                        label={"Password"}
-                        {...field}
-                        error={!!errors[field.name]}
-                        helperText={
-                          !!errors[field.name] && "Please enter your password!"
-                        }
-                      />
-                    </FormControl>
-                  );
-                }}
-              />
-              <Controller
-                name="date_of_birth"
-                rules={{
-                  required: true,
-                }}
-                control={control}
-                render={({ field }) => {
-                  return (
-                    <FormControl fullWidth>
-                      <TextField
-                        type="date"
-                        // label={"Date of birth"}
-                        {...field}
-                        error={!!errors[field.name]}
-                        helperText={
-                          !!errors[field.name] &&
-                          "Please enter your date of birth!"
-                        }
-                      />
-                    </FormControl>
-                  );
-                }}
-              />
-              <Controller
-                name="address"
-                rules={{
-                  required: false,
-                }}
-                control={control}
-                render={({ field }) => {
-                  return (
-                    <FormControl fullWidth>
-                      <TextField
-                        label={"Address"}
-                        {...field}
-                        error={!!errors[field.name]}
-                        helperText={
-                          !!errors[field.name] && "Please enter your address!"
-                        }
-                      />
-                    </FormControl>
-                  );
-                }}
-              />
+                }
+              )}
               <RoleSelect
                 control={control}
                 errors={errors}

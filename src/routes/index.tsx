@@ -44,11 +44,6 @@ SignUp.preload();
 
 export const privateRoutes: IRoute[] = [
   {
-    path: "/",
-    key: "signin",
-    component: <SignIn />,
-  },
-  {
     path: LOG_IN,
     key: "signin",
     component: <SignIn />,
@@ -61,16 +56,6 @@ export const privateRoutes: IRoute[] = [
 ];
 
 export const publicRoutes: IRoute[] = [
-  {
-    path: LOG_IN,
-    key: "signin",
-    component: <SignIn />,
-  },
-  {
-    path: REGISTER,
-    key: "signup",
-    component: <SignUp />,
-  },
   {
     path: "/",
     key: "user",

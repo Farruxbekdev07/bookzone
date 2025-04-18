@@ -1,9 +1,10 @@
+/* eslint-disable no-useless-concat */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable array-callback-return */
-import React, { useState } from "react";
+import React from "react";
 import Container from "../../components/Container";
 import { StyledComponent } from "../Styles/style";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Pagination, Typography } from "@mui/material";
 import SearchBar from "../components/searchBar";
 import CustomTabs from "../../components/Tabs/customTabs";
 import { IBookData, ITabsData } from "../../interfaces";
@@ -16,18 +17,28 @@ import paths from "../../constants/paths";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "../../utils/api";
 import { useSelector } from "react-redux";
-import { getDataWithToken } from "../../utils";
+import { getUsers } from "../../utils";
 import NoData from "../../components/NoData";
+import { FieldValues, useForm } from "react-hook-form";
+import ButtonComponent from "../../components/Button";
+import axios from "axios";
 const { CREATE__BOOK } = paths;
+const { baseUrl, booksApi, usersApi } = api;
 
 function Books() {
   const token = useSelector((state: any) => state.auth.token);
-  const [inputChange, setInputChange] = useState("");
-  const [bookData, setBookData] = useState([]);
-  const [value, setValue] = useState(0);
+  const [bookData, setBookData] = React.useState([]);
+  const [value, setValue] = React.useState<number | any>(0);
+  const [page, setPage] = React.useState<number | any>(1);
   const navigate = useNavigate();
-  const { baseUrl, booksApi } = api;
-  const apiUrl = baseUrl + booksApi;
+  const apiUrl = baseUrl + booksApi + `?page=${page}` + `&pageSize=${8}`;
+  const usersApiUrl = baseUrl + usersApi;
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm();
 
   const {
     data: getBookData,
@@ -36,8 +47,39 @@ function Books() {
     isSuccess,
   } = useQuery({
     queryKey: ["books"],
-    queryFn: () => getDataWithToken(apiUrl, token),
+    queryFn: async () => {
+      const response = await axios.get(apiUrl);
+      return response?.data;
+    },
   });
+
+  const {
+    data: getUserData,
+    isLoading: getUserLoading,
+    isError: getUserError,
+  } = useQuery({
+    queryKey: ["users"],
+    queryFn: () => getUsers(usersApiUrl, token),
+  });
+
+  const handleSearch = async (data: FieldValues | any) => {
+    if (data?.search) {
+      const filterData = getBookData?.payload.docs?.filter((book: IBookData) =>
+        book?.title
+          ?.toLocaleLowerCase()
+          .includes(data?.search?.toLocaleLowerCase()?.trim())
+      );
+      setBookData(filterData);
+    } else {
+      setBookData(getBookData?.payload?.docs);
+    }
+  };
+
+  React.useEffect(() => {
+    refetch();
+    setBookData(getBookData?.payload?.docs);
+    console.log(getBookData?.payload?.docs);
+  }, [isLoading, isSuccess, getUserLoading, getUserError, page]);
 
   const bookTabData: ITabsData[] = [
     {
@@ -74,20 +116,6 @@ function Books() {
     },
   ];
 
-  const handleSearch = () => {
-    const filterData = getBookData?.payload.docs?.filter((book: IBookData) =>
-      book?.title
-        ?.toLocaleLowerCase()
-        .includes(inputChange?.toLocaleLowerCase())
-    );
-    setBookData(filterData);
-  };
-
-  React.useEffect(() => {
-    refetch();
-    setBookData(getBookData?.payload?.docs);
-  }, [isLoading, isSuccess]);
-
   return (
     <>
       <Header />
@@ -96,9 +124,9 @@ function Books() {
           <HomePageStyles>
             <Box className="search-bar-container">
               <SearchBar
-                onChange={setInputChange}
-                onClick={handleSearch}
-                value={inputChange}
+                onClick={handleSubmit(handleSearch)}
+                control={control}
+                errors={errors}
               />
             </Box>
             <Box className="home-page-container">
@@ -106,13 +134,19 @@ function Books() {
                 Asosiy Kategoriyalar
               </Typography>
               <Box className="home-page-tabs">
-                <Button
-                  className="create-book"
-                  variant="contained"
-                  onClick={() => navigate(CREATE__BOOK)}
-                >
-                  Crete Book
-                </Button>
+                {getUserData?.data?.user?.role === "author" ? (
+                  <ButtonComponent
+                    className="create-book"
+                    variant="contained"
+                    type="button"
+                    isDisabled={false}
+                    onClick={() => navigate(CREATE__BOOK)}
+                  >
+                    Crete Book
+                  </ButtonComponent>
+                ) : (
+                  <></>
+                )}
                 <CustomTabs
                   value={value}
                   setValue={setValue}
@@ -141,6 +175,14 @@ function Books() {
                 ) : (
                   <NoData />
                 )}
+                <Pagination
+                  // Math.ceil(bookData?.length)
+                  count={Math.ceil(160 / 8)}
+                  page={page}
+                  onChange={(_, currentPage) => setPage(currentPage)}
+                  sx={{ color: "white" }}
+                  defaultPage={1}
+                />
               </Box>
             </Box>
           </HomePageStyles>

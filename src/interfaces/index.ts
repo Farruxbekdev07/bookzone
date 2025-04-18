@@ -37,7 +37,7 @@ export interface IBookData {
   createdAt?: string | any;
   isFeatured?: boolean;
   isPublished?: boolean;
-  language?: string;
+  language?: string | any;
   link?: string;
 }
 export interface IAuthorData {
@@ -47,6 +47,7 @@ export interface IAuthorData {
   lastName?: string;
   date_of_birth?: number | string | any;
   date_of_death?: number | string | any;
+  role?: string | any;
 }
 export interface IUserData {
   image?: File | string | any;
